@@ -1,0 +1,58 @@
+{
+    "name": "@ori-os/worker",
+    "version": "0.1.0",
+    "description": "Ori-OS Background Worker",
+    "private": true,
+    "scripts": {
+        "dev": "tsx watch src/main.ts",
+        "build": "tsc",
+        "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+        "start": "node dist/main.js",
+        "start:dev": "nest start --watch",
+        "start:debug": "nest start --debug --watch",
+        "start:prod": "node dist/main",
+        "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
+        "test": "jest"
+    },
+    "dependencies": {
+        "@nestjs/bullmq": "^11.0.1",
+        "@nestjs/common": "^11.1.13",
+        "@nestjs/config": "^3.3.0",
+        "@nestjs/core": "^11.1.13",
+        "@ori-os/db": "*",
+        "bullmq": "^5.67.3",
+        "reflect-metadata": "^0.2.2",
+        "rxjs": "^7.8.1",
+        "ioredis": "^5.3.2",
+        "@prisma/client": "^5.0.0"
+    },
+    "devDependencies": {
+        "@nestjs/cli": "^11.0.0",
+        "@nestjs/schematics": "^11.0.0",
+        "@nestjs/testing": "^11.0.1",
+        "@types/jest": "^30.0.0",
+        "@types/node": "^22.10.7",
+        "jest": "^30.0.0",
+        "ts-jest": "^29.2.5",
+        "ts-node": "^10.9.2",
+        "tsx": "^4.7.0",
+        "typescript": "^5.7.3"
+    },
+    "jest": {
+        "moduleFileExtensions": [
+            "js",
+            "json",
+            "ts"
+        ],
+        "rootDir": "src",
+        "testRegex": ".*\\.spec\\.ts$",
+        "transform": {
+            "^.+\\.(t|j)s$": "ts-jest"
+        },
+        "collectCoverageFrom": [
+            "**/*.(t|j)s"
+        ],
+        "coverageDirectory": "../coverage",
+        "testEnvironment": "node"
+    }
+}
