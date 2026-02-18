@@ -1,23 +1,39 @@
-
-import { Injectable } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
+import { Injectable, UnauthorizedException } from "@nestjs/common";
+import { AuthGuard } from "@nestjs/passport";
 
 @Injectable()
-export class JwtAuthGuard extends AuthGuard('jwt') {
-    handleRequest(err, user, info, context) {
-        // SECURITY: Only allow bypass in development mode
-        // In production, this will enforce strict JWT authentication
-        if (process.env.NODE_ENV === 'development' && process.env.AUTH_BYPASS === 'true') {
-            console.warn('⚠️  AUTH BYPASS ACTIVE - Development mode only');
-            return user || { id: 'mock-user-id', userId: 'mock-user-id', email: 'admin@oricraftlabs.com', organizationId: 'mock-org-id' };
+export class JwtAuthGuard extends AuthGuard("jwt") {
+    handleRequest(err: any, user: any) {
+        const isDev = process.env.NODE_ENV === "development";
+        const bypassEnabled =
+            isDev &&
+            (process.env.ORI_AUTH_BYPASS === "1" ||
+                process.env.ORI_AUTH_BYPASS === "true");
+
+        if (
+            !isDev &&
+            (process.env.ORI_AUTH_BYPASS === "1" ||
+                process.env.ORI_AUTH_BYPASS === "true")
+        ) {
+            throw new UnauthorizedException(
+                "ORI_AUTH_BYPASS must never be enabled in production"
+            );
         }
 
-        // Production: Strict authentication required
+        if (bypassEnabled) {
+            console.warn("⚠️ ORI_AUTH_BYPASS ACTIVE (development only)");
+            return (
+                user || {
+                    userId: "mock-user-id",
+                    email: "admin@oricraftlabs.com",
+                    organizationId: "mock-org-id",
+                }
+            );
+        }
+
         if (err || !user) {
-            throw err || new Error('Unauthorized');
+            throw err || new UnauthorizedException("Unauthorized");
         }
-
         return user;
     }
 }
-

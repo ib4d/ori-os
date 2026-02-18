@@ -14,10 +14,11 @@ const nextAuth = NextAuth({
                 password: { label: "Password", type: "password" },
             },
             async authorize(credentials) {
-                // Placeholder for real auth logic
-                if (credentials?.email === "admin@ori-os.com" && credentials?.password === "password") {
-                    return { id: "1", name: "Admin", email: "admin@ori-os.com" }
-                }
+                // Real auth logic should use database and bcrypt comparison
+                // The API handles the core auth, Web uses this for NextAuth session
+
+                // For development, if ORI_AUTH_BYPASS is on, this is handled in callbacks
+                // But we should not have hardcoded admin/password here.
                 return null
             },
         }),
