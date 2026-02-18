@@ -10,7 +10,7 @@ WORKDIR /app
 RUN npm install turbo --global
 
 COPY . .
-RUN turbo prune --scope=@ori-os/web --docker
+RUN turbo prune --scope=@ori-os/worker --docker
 
 # Add installer image
 FROM base AS installer
@@ -31,35 +31,25 @@ COPY turbo.json turbo.json
 RUN npx turbo run db:generate
 
 # Build the project
-RUN npx turbo run build --filter=@ori-os/web...
+RUN npx turbo run build --filter=@ori-os/worker...
 
 FROM base AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production
-# Disable next.js telemetry
-ENV NEXT_TELEMETRY_DISABLED=1
 
 RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
+RUN adduser --system --uid 1001 nestjs
 
-COPY --from=installer /app/apps/web/public ./apps/web/public
+# Copy built artifacts
+COPY --from=installer --chown=nestjs:nodejs /app/apps/worker/dist ./dist
+COPY --from=installer --chown=nestjs:nodejs /app/apps/worker/package.json ./package.json
 
-# Set the correct permission for prerender cache
-RUN mkdir .next
-RUN chown nextjs:nodejs .next
+# Copy node_modules (including Prisma)
+COPY --from=installer --chown=nestjs:nodejs /app/node_modules ./node_modules
+# Copy DB package for Prisma Client
+COPY --from=installer --chown=nestjs:nodejs /app/packages/db ./packages/db
 
-# Automatically leverage output traces to reduce image size
-# https://nextjs.org/docs/advanced-features/output-file-tracing
-COPY --from=installer --chown=nextjs:nodejs /app/apps/web/.next/standalone ./
-COPY --from=installer --chown=nextjs:nodejs /app/apps/web/.next/static ./apps/web/.next/static
+USER nestjs
 
-USER nextjs
-
-EXPOSE 3000
-
-ENV PORT=3000
-# set hostname to localhost
-ENV HOSTNAME="0.0.0.0"
-
-CMD ["node", "apps/web/server.js"]
+CMD ["node", "dist/main.js"]

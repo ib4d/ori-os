@@ -1,47 +1,57 @@
-# Build stage
-FROM node:20-alpine AS builder
+FROM node:20-alpine AS base
 
+# Install dependencies only when needed
+FROM base AS builder
+# Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
+RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-# Install dependencies needed for node-gyp or prisma
-RUN apk add --no-cache libc6-compat
+# Install turbo global
+RUN npm install turbo --global
 
-# Copy root configs
-COPY package.json package-lock.json turbo.json tsconfig.base.json ./
-# Copy app and package configs
-COPY apps/api/package.json ./apps/api/
-COPY packages/db/package.json ./packages/db/
-COPY packages/ui/package.json ./packages/ui/
-
-# Install root dependencies
-RUN npm install
-
-# Copy source code
 COPY . .
+RUN turbo prune --scope=@ori-os/api --docker
 
-# Generate Prisma client with correct binary targets for Alpine
-RUN npm run db:generate
+# Add installer image
+FROM base AS installer
+RUN apk add --no-cache libc6-compat
+WORKDIR /app
 
-# Build the API
-RUN npx turbo build --filter=@ori-os/api...
+# First install dependencies (as they change less often)
+COPY .gitignore .gitignore
+COPY --from=builder /app/out/json/ .
+COPY --from=builder /app/out/package-lock.json ./package-lock.json
+RUN npm ci
 
-# Production stage
-FROM node:20-alpine AS runner
+# Build the project and its dependencies
+COPY --from=builder /app/out/full/ .
+COPY turbo.json turbo.json
 
+# Generate Prisma Client
+RUN npx turbo run db:generate
+
+# Build the project
+RUN npx turbo run build --filter=@ori-os/api...
+
+FROM base AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production
 
-# Copy built API
-COPY --from=builder /app/apps/api/dist ./apps/api/dist
-COPY --from=builder /app/apps/api/package.json ./apps/api/package.json
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nestjs
 
-# Copy node_modules (this is large, but ensures all deps including prisma are there)
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/packages/db ./packages/db
+# Copy built artifacts
+COPY --from=installer --chown=nestjs:nodejs /app/apps/api/dist ./dist
+COPY --from=installer --chown=nestjs:nodejs /app/apps/api/package.json ./package.json
 
-WORKDIR /app/apps/api
+# Copy node_modules (including Prisma)
+COPY --from=installer --chown=nestjs:nodejs /app/node_modules ./node_modules
+# Copy DB package for Prisma Client
+COPY --from=installer --chown=nestjs:nodejs /app/packages/db ./packages/db
 
-EXPOSE 3001
+USER nestjs
+
+EXPOSE 4000
 
 CMD ["node", "dist/main.js"]

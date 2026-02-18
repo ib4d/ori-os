@@ -45,9 +45,8 @@ ori-os/
 
 ### Prerequisites
 
-*   Node.js >= 20
-*   npm or pnpm
 *   Docker & Docker Compose
+*   Node.js >= 20 (for local scripting, though everything runs in Docker)
 
 ### 1. Clone the Repository
 
@@ -56,88 +55,53 @@ git clone https://github.com/ib4d/ori-os.git
 cd ori-os
 ```
 
-### 2. Install Dependencies
+### 2. Environment Setup
 
-```bash
-npm install --legacy-peer-deps
-```
-
-### 3. Environment Setup
-
-Copy the example environment file and configure it:
+Copy the example environment file:
 
 ```bash
 cp .env.example .env
 ```
 
-Ensure your `.env` file has valid credentials for:
-*   Database (PostgreSQL)
-*   Redis
-*   Authentication Secrets
-*   API Keys (OpenAI, SendGrid, etc.)
+### 3. Start Development Environment
 
-### 4. Infrastructure Setup
-
-Start the database and Redis containers:
+Start all services (Web, API, Worker, DB, Redis, MinIO, MeiliSearch) in Docker:
 
 ```bash
-docker-compose up -d
+npm run dev:up
 ```
 
-### 5. Database Setup
+Access the application:
+*   **Web Dashboard:** [http://localhost:3000](http://localhost:3000)
+*   **API:** [http://localhost:4000](http://localhost:4000)
+*   **MinIO Console:** [http://localhost:9001](http://localhost:9001)
+*   **Mailpit/Inbucket (if configured):** Check docker-compose.dev.yml
 
-Push the schema to the database:
+To stop the environment:
 
 ```bash
-npm run db:push
+npm run dev:down
 ```
 
-(Optional) Seed the database:
+## 🚀 Production Deployment
 
-```bash
-npm run seed --workspace=apps/api
-```
+We support a fully Dockerized production deployment suitable for VPS providers like Hostinger, DigitalOcean, or AWS EC2.
 
-### 6. Start Development Servers
+**[Read the Full Deployment Guide](DEPLOYMENT_HOSTINGER.md)**
 
-You can start all services at once or individually.
+### Quick Summary
 
-**Start All:**
-
-```bash
-npm run dev
-```
-
-**Start Individual Services:**
-
-*   **API:** `npm run dev:api` (Runs on port 3001)
-*   **Web:** `npm run dev:web` (Runs on port 3000)
-*   **Worker:** `npm run dev:worker`
-
-## 🚀 Production Guide
-
-### Building for Production
-
-To build all apps and packages:
-
-```bash
-npm run build
-```
-
-This will run the build command for `web`, `api`, and `worker` via TurboRepo.
-
-### Deployment
-
-The project includes `Dockerfile`s for each application. You can deploy it using Docker or any cloud provider that supports Node.js.
-
-**Deployment Strategy:**
-
-1.  **Database:** Managed PostgreSQL (AWS RDS, Supabase, Neon).
-2.  **Redis:** Managed Redis (Upstash, AWS ElastiCache).
-3.  **API & Worker:** Deploy as Node.js services (AWS ECS, DigitalOcean App Platform, Railway).
-4.  **Web:** Deploy to Vercel or as a containerized Node.js app.
-
-Ensure all environment variables are correctly set in your production environment.
+1.  **Clone Repo** on your VPS.
+2.  **Configure `.env.production`** with real secrets.
+3.  **Start Services:**
+    ```bash
+    npm run prod:up
+    ```
+4.  **Migrate Database:**
+    ```bash
+    npm run prod:migrate
+    ```
+5.  **Set up Nginx Proxy Manager** to handle SSL and routing to ports 3000 (Web) and 4000 (API).
 
 ## 🤝 Contributing
 
