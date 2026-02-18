@@ -1,89 +1,82 @@
+import {
+    Controller,
+    Get,
+    Post,
+    Body,
+    Param,
+    Put,
+    Delete,
+    UseGuards,
+    Request,
+} from "@nestjs/common";
+import { PrismaService } from "@ori-os/db/nestjs";
+import { JwtAuthGuard } from "./auth/jwt-auth.guard";
 
-import { Controller, Get, Post, Body, Param, Put, Delete, UseGuards, Request } from '@nestjs/common';
-import { PrismaService } from '@ori-os/db/nestjs';
-import { JwtAuthGuard } from './auth/jwt-auth.guard';
-
-@Controller('automations/workflows')
+@Controller("automations/workflows")
 @UseGuards(JwtAuthGuard)
 export class AutomationsController {
     constructor(private readonly prisma: PrismaService) { }
 
     @Get()
-    async findAll(@Request() req) {
-        const orgId = req.user.organizationId || 'default-org-id';
+    async findAll(@Request() req: any) {
+        const orgId = req.user.organizationId || "default-org-id";
         return (this.prisma as any).workflow.findMany({
             where: { organizationId: orgId },
         });
     }
 
     @Post()
-    async create(@Request() req, @Body() data: any) {
-        const orgId = req.user.organizationId || 'default-org-id';
+    async create(@Request() req: any, @Body() data: any) {
+        const orgId = req.user.organizationId || "default-org-id";
         return (this.prisma as any).workflow.create({
-            data: {
-                ...data,
-                organizationId: orgId,
-            },
+            data: { ...data, organizationId: orgId },
         });
     }
 
-    @Get(':id')
-    async findOne(@Param('id') id: string) {
-        return (this.prisma as any).workflow.findUnique({
-            where: { id },
+    // IMPORTANT: static paths must come before ":id"
+    @Get("runs")
+    async getRuns(@Request() req: any) {
+        const orgId = req.user.organizationId || "default-org-id";
+        return (this.prisma as any).workflowRun.findMany({
+            where: { organizationId: orgId },
+            include: { workflow: true },
+            orderBy: { startedAt: "desc" },
+            take: 20,
         });
     }
 
-    @Put(':id')
-    async update(@Param('id') id: string, @Body() data: any) {
-        return (this.prisma as any).workflow.update({
-            where: { id },
-            data,
-        });
+    @Get(":id")
+    async findOne(@Param("id") id: string) {
+        return (this.prisma as any).workflow.findUnique({ where: { id } });
     }
 
-    @Delete(':id')
-    async remove(@Param('id') id: string) {
-        return (this.prisma as any).workflow.delete({
-            where: { id },
-        });
+    @Put(":id")
+    async update(@Param("id") id: string, @Body() data: any) {
+        return (this.prisma as any).workflow.update({ where: { id }, data });
     }
 
-    @Post(':id/run')
-    async run(@Request() req, @Param('id') id: string) {
-        const orgId = req.user.organizationId || 'default-org-id';
+    @Delete(":id")
+    async remove(@Param("id") id: string) {
+        return (this.prisma as any).workflow.delete({ where: { id } });
+    }
+
+    @Post(":id/run")
+    async run(@Request() req: any, @Param("id") id: string) {
+        const orgId = req.user.organizationId || "default-org-id";
+
         const workflow = await (this.prisma as any).workflow.findUnique({
             where: { id },
         });
+        if (!workflow) return { error: "Workflow not found" };
 
-        if (!workflow) return { error: 'Workflow not found' };
-
-        // Create WorkflowRun
         const run = await (this.prisma as any).workflowRun.create({
             data: {
                 workflowId: id,
                 organizationId: orgId,
-                status: 'running',
-            }
+                status: "running",
+            },
         });
 
-        // Simulate step execution logic...
-        // For MVP, we'll just mark it as completed shortly
-
-        return {
-            status: 'started',
-            runId: run.id,
-        };
-    }
-
-    @Get('runs')
-    async getRuns(@Request() req) {
-        const orgId = req.user.organizationId || 'default-org-id';
-        return (this.prisma as any).workflowRun.findMany({
-            where: { organizationId: orgId },
-            include: { workflow: true },
-            orderBy: { startedAt: 'desc' },
-            take: 20,
-        });
+        return { status: "started", runId: run.id };
     }
 }
