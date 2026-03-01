@@ -87,21 +87,21 @@ export function DealDetailsModal({ isOpen, onClose, deal }: DealDetailsModalProp
                         </div>
                     </div>
 
-                    <div className="p-4 rounded-sm bg-muted/30 border border-border">
+                    <div className="p-4 rounded-none bg-muted/30 border border-border">
                         <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
                             <Clock className="h-4 w-4 text-tangerine" />
                             Deal Activity
                         </h3>
                         <div className="space-y-3">
                             <div className="text-xs flex gap-3">
-                                <div className="w-2 h-2 rounded-full bg-tangerine mt-1.5 shrink-0" />
+                                <div className="w-2 h-2 rounded-none bg-tangerine mt-1.5 shrink-0" />
                                 <div>
                                     <p className="font-medium">Deal created</p>
                                     <p className="text-muted-foreground">{new Date(deal.createdAt || Date.now()).toLocaleDateString()}</p>
                                 </div>
                             </div>
                             <div className="text-xs flex gap-3">
-                                <div className="w-2 h-2 rounded-full bg-muted mt-1.5 shrink-0" />
+                                <div className="w-2 h-2 rounded-none bg-muted mt-1.5 shrink-0" />
                                 <div>
                                     <p className="font-medium">Stage updated to {deal.stage}</p>
                                     <p className="text-muted-foreground">Recent activity</p>

@@ -30,8 +30,8 @@ export function CompanyDetailsModal({ isOpen, onClose, company }: CompanyDetails
                 </DialogHeader>
                 <div className="space-y-6 py-4">
                     <div className="flex items-center gap-4">
-                        <Avatar className="h-16 w-16 rounded-sm">
-                            <AvatarFallback className="text-xl rounded-sm">
+                        <Avatar className="h-16 w-16 rounded-none">
+                            <AvatarFallback className="text-xl rounded-none">
                                 {company.name[0]}
                             </AvatarFallback>
                         </Avatar>
@@ -82,7 +82,7 @@ export function CompanyDetailsModal({ isOpen, onClose, company }: CompanyDetails
 
                     <div className="space-y-2 pt-2">
                         <Label className="text-xs text-muted-foreground uppercase">Description</Label>
-                        <div className="flex gap-2 p-3 rounded-sm bg-muted/50 text-sm text-foreground italic border-l-2 border-tangerine">
+                        <div className="flex gap-2 p-3 rounded-none bg-muted/50 text-sm text-foreground italic border-l-2 border-tangerine">
                             <Info className="h-4 w-4 text-tangerine shrink-0 mt-0.5" />
                             {company.description || 'No description available.'}
                         </div>

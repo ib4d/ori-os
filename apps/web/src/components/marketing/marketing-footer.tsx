@@ -28,7 +28,6 @@ const footerLinks = {
         { label: 'Privacy', href: '/privacy' },
         { label: 'Terms', href: '/terms' },
         { label: 'Security', href: '/security' },
-        { label: 'GDPR', href: '/gdpr' },
     ],
 };
 
@@ -44,11 +43,11 @@ export function MarketingFooter() {
         <footer className="bg-muted/30 border-t border-border">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
                 {/* Main footer content */}
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 lg:gap-12">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
                     {/* Brand column */}
                     <div className="col-span-2 lg:col-span-2">
                         <Link href="/" className="flex items-center gap-2 mb-4">
-                            <div className="h-8 w-8 rounded-sm bg-gradient-to-br from-tangerine to-tangerine/80 flex items-center justify-center">
+                            <div className="h-8 w-8 rounded-none bg-gradient-to-br from-tangerine to-tangerine/80 flex items-center justify-center">
                                 <span className="text-white font-bold text-lg">O</span>
                             </div>
                             <span className="font-semibold text-xl text-foreground">

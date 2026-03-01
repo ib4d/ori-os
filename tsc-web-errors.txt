@@ -1,0 +1,5 @@
+apps/web/src/app/(dashboard)/dashboard/automation/page.tsx(95,79): error TS2367: This comparison appears to be unintentional because the types '"active" | "paused" | "draft"' and '"Active"' have no overlap.
+apps/web/src/app/(dashboard)/dashboard/automation/page.tsx(145,53): error TS2367: This comparison appears to be unintentional because the types '"active" | "paused" | "draft"' and '"Active"' have no overlap.
+apps/web/src/app/(dashboard)/dashboard/workflows/page.tsx(35,81): error TS2367: This comparison appears to be unintentional because the types '"active" | "paused" | "draft"' and '"Active"' have no overlap.
+apps/web/src/app/(dashboard)/dashboard/workflows/page.tsx(68,61): error TS2367: This comparison appears to be unintentional because the types '"active" | "paused" | "draft"' and '"Active"' have no overlap.
+apps/web/src/app/(dashboard)/dashboard/workflows/page.tsx(78,46): error TS2367: This comparison appears to be unintentional because the types '"active" | "paused" | "draft"' and '"Active"' have no overlap.

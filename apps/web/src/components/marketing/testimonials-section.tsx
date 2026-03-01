@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Card, CardContent, Avatar, AvatarFallback, AvatarImage } from '@ori-os/ui';
+import { Card, CardContent, Avatar, AvatarFallback, AvatarImage, cn } from '@ori-os/ui';
 import { ChevronLeft, ChevronRight, Quote } from 'lucide-react';
 
 const testimonials = [
@@ -21,14 +21,6 @@ const testimonials = [
         title: 'Revenue Operations',
         company: 'ScaleUp Inc',
         avatar: 'MT',
-    },
-    {
-        quote:
-            "We're excited to collaborate on the next phase, focusing on adaptive mobile and tablet versions.",
-        author: 'Jacob N.',
-        title: 'CEO',
-        company: 'Orion',
-        avatar: 'JN',
     },
     {
         quote:
@@ -52,83 +44,94 @@ export function TestimonialsSection() {
     };
 
     return (
-        <section className="py-24 lg:py-32 bg-silver/20">
+        <section className="py-24 lg:py-40 bg-background border-y border-border/40">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.5 }}
-                    className="text-center mb-16"
+                    className="mb-20"
                 >
-                    <p className="text-sm font-medium text-tangerine mb-2">Client Feedback</p>
-                    <h2 className="text-3xl sm:text-4xl font-bold text-foreground">
-                        What our customers say
+                    <h2 className="text-3xl sm:text-5xl font-bold text-foreground mb-6 tracking-tight">
+                        Built for <span className="text-tangerine">Teams</span>
                     </h2>
+                    <p className="text-xl text-muted-foreground max-w-2xl leading-relaxed">
+                        Join hundreds of organizations using Ori-OS to drive
+                        measurable growth and operational efficiency.
+                    </p>
                 </motion.div>
 
-                <div className="max-w-4xl mx-auto relative">
+                <div className="max-w-5xl relative">
                     <AnimatePresence mode="wait">
                         <motion.div
                             key={currentIndex}
-                            initial={{ opacity: 0, x: 50 }}
+                            initial={{ opacity: 0, x: 20 }}
                             animate={{ opacity: 1, x: 0 }}
-                            exit={{ opacity: 0, x: -50 }}
-                            transition={{ duration: 0.3 }}
+                            exit={{ opacity: 0, x: -20 }}
+                            transition={{ duration: 0.4 }}
                         >
-                            <Card variant="glass" className="text-center p-8 lg:p-12">
-                                <CardContent className="p-0">
-                                    <Quote className="h-10 w-10 text-tangerine/30 mx-auto mb-6" />
-                                    <blockquote className="text-xl lg:text-2xl text-foreground font-medium mb-8 leading-relaxed">
+                            <Card className="rounded-none border-border bg-muted/20 p-8 lg:p-16 relative overflow-hidden">
+                                <CardContent className="p-0 relative z-10">
+                                    <Quote className="h-12 w-12 text-tangerine/20 mb-10" />
+                                    <blockquote className="text-2xl lg:text-4xl text-foreground font-medium mb-12 leading-tight tracking-tight italic">
                                         "{testimonials[currentIndex].quote}"
                                     </blockquote>
-                                    <div className="flex items-center justify-center gap-4">
-                                        <Avatar className="h-12 w-12">
+
+                                    <div className="flex items-center gap-6">
+                                        <Avatar className="h-16 w-16 rounded-none border border-border">
                                             <AvatarImage
+                                                className="rounded-none"
                                                 src={`https://api.dicebear.com/7.x/initials/svg?seed=${testimonials[currentIndex].avatar}`}
                                             />
-                                            <AvatarFallback>{testimonials[currentIndex].avatar}</AvatarFallback>
+                                            <AvatarFallback className="rounded-none bg-tangerine/5 text-tangerine">
+                                                {testimonials[currentIndex].avatar}
+                                            </AvatarFallback>
                                         </Avatar>
-                                        <div className="text-left">
-                                            <div className="font-semibold text-foreground">
+                                        <div>
+                                            <div className="text-xl font-bold text-foreground tracking-tight">
                                                 {testimonials[currentIndex].author}
                                             </div>
-                                            <div className="text-sm text-muted-foreground">
+                                            <div className="text-sm font-bold uppercase tracking-widest text-tangerine/80">
                                                 {testimonials[currentIndex].title}, {testimonials[currentIndex].company}
                                             </div>
                                         </div>
                                     </div>
                                 </CardContent>
+
+                                <div className="absolute top-0 right-0 w-32 h-32 bg-tangerine/5 -mr-16 -mt-16 rotate-45" />
                             </Card>
                         </motion.div>
                     </AnimatePresence>
 
                     {/* Navigation */}
-                    <div className="flex items-center justify-center gap-4 mt-8">
+                    <div className="flex items-center gap-px bg-border border border-border w-fit mt-12">
                         <button
                             onClick={prev}
-                            className="p-2 rounded-full border border-border hover:bg-muted transition-colors"
+                            className="p-4 bg-background hover:bg-muted transition-colors"
                             aria-label="Previous testimonial"
                         >
-                            <ChevronLeft className="h-5 w-5" />
+                            <ChevronLeft className="h-6 w-6 text-foreground" />
                         </button>
-                        <div className="flex gap-2">
+                        <div className="flex items-center gap-4 px-6 bg-background">
                             {testimonials.map((_, index) => (
                                 <button
                                     key={index}
                                     onClick={() => setCurrentIndex(index)}
-                                    className={`w-2 h-2 rounded-full transition-colors ${index === currentIndex ? 'bg-tangerine' : 'bg-border'
-                                        }`}
+                                    className={cn(
+                                        "w-8 h-1 transition-colors",
+                                        index === currentIndex ? "bg-tangerine" : "bg-border hover:bg-muted-foreground/30"
+                                    )}
                                     aria-label={`Go to testimonial ${index + 1}`}
                                 />
                             ))}
                         </div>
                         <button
                             onClick={next}
-                            className="p-2 rounded-full border border-border hover:bg-muted transition-colors"
+                            className="p-4 bg-background hover:bg-muted transition-colors"
                             aria-label="Next testimonial"
                         >
-                            <ChevronRight className="h-5 w-5" />
+                            <ChevronRight className="h-6 w-6 text-foreground" />
                         </button>
                     </div>
                 </div>

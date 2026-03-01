@@ -108,7 +108,7 @@ export function AlertsPanel() {
         return (
             <Card className="p-6">
                 <div className="flex items-center gap-2">
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary" />
+                    <div className="animate-spin rounded-none h-4 w-4 border-b-2 border-primary" />
                     <span className="text-sm text-muted-foreground">Loading alerts...</span>
                 </div>
             </Card>
@@ -179,7 +179,7 @@ export function AlertsPanel() {
                         return (
                             <div
                                 key={alert.id}
-                                className={`p-4 rounded-lg border-l-4 ${config.borderColor} ${alert.status === 'unread'
+                                className={`p-4 rounded-none border-l-4 ${config.borderColor} ${alert.status === 'unread'
                                         ? 'bg-accent/50'
                                         : 'bg-background opacity-75'
                                     }`}

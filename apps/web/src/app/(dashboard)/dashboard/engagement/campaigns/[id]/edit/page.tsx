@@ -27,7 +27,7 @@ export default function CampaignEditPage({ params }: { params: Promise<{ id: str
                     <CardDescription>Modify your campaign steps and content.</CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <div className="p-20 border-2 border-dashed rounded-lg text-center opacity-50">
+                    <div className="p-20 border-2 border-dashed rounded-none text-center opacity-50">
                         <p className="text-lg font-medium">Advanced Editor Coming Soon</p>
                         <p className="text-sm text-muted-foreground">The drag-and-drop sequence builder is being integrated.</p>
                     </div>

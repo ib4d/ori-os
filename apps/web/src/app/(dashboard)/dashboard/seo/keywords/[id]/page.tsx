@@ -97,7 +97,7 @@ export default async function KeywordDetailPage({ params }: { params: Promise<{ 
                                 <p className="text-sm text-muted-foreground font-medium uppercase tracking-wider">Current Rank</p>
                                 <p className="text-3xl font-bold text-foreground mt-1">#{keyword.position}</p>
                             </div>
-                            <div className="p-2 rounded-lg bg-success/10 text-success">
+                            <div className="p-2 rounded-none bg-success/10 text-success">
                                 <TrendingUp className="h-5 w-5" />
                             </div>
                         </div>
@@ -114,7 +114,7 @@ export default async function KeywordDetailPage({ params }: { params: Promise<{ 
                                 <p className="text-sm text-muted-foreground font-medium uppercase tracking-wider">Search Volume</p>
                                 <p className="text-3xl font-bold text-foreground mt-1">{keyword.searchVolume.toLocaleString()}</p>
                             </div>
-                            <div className="p-2 rounded-lg bg-primary/10 text-primary">
+                            <div className="p-2 rounded-none bg-primary/10 text-primary">
                                 <Search className="h-5 w-5" />
                             </div>
                         </div>
@@ -131,7 +131,7 @@ export default async function KeywordDetailPage({ params }: { params: Promise<{ 
                                 <p className="text-sm text-muted-foreground font-medium uppercase tracking-wider">Keyword Difficulty</p>
                                 <p className="text-3xl font-bold text-foreground mt-1">{keyword.difficulty}/100</p>
                             </div>
-                            <div className="p-2 rounded-lg bg-orange-500/10 text-orange-500">
+                            <div className="p-2 rounded-none bg-orange-500/10 text-orange-500">
                                 <Zap className="h-5 w-5" />
                             </div>
                         </div>
@@ -146,7 +146,7 @@ export default async function KeywordDetailPage({ params }: { params: Promise<{ 
                                 <p className="text-sm text-muted-foreground font-medium uppercase tracking-wider">Estimated CPC</p>
                                 <p className="text-3xl font-bold text-foreground mt-1">{keyword.cpc}</p>
                             </div>
-                            <div className="p-2 rounded-lg bg-muted text-muted-foreground">
+                            <div className="p-2 rounded-none bg-muted text-muted-foreground">
                                 <Globe className="h-5 w-5" />
                             </div>
                         </div>
@@ -259,7 +259,7 @@ export default async function KeywordDetailPage({ params }: { params: Promise<{ 
 
 function Progress({ value, className }: { value: number; className?: string }) {
     return (
-        <div className={`w-full bg-muted rounded-full overflow-hidden ${className}`}>
+        <div className={`w-full bg-muted rounded-none overflow-hidden ${className}`}>
             <div
                 className="h-full bg-primary transition-all duration-500 ease-out"
                 style={{ width: `${value}%` }}

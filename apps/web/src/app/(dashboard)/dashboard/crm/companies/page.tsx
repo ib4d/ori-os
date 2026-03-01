@@ -34,7 +34,7 @@ import { useToast } from '@ori-os/ui';
 import { CompanyDetailsModal } from '../../../../../components/crm/company-details-modal';
 
 export default function CompaniesPage() {
-    const { companies, isLoading, refresh } = useCompanies();
+    const { companies, isLoading, error, refresh } = useCompanies();
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
     const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
     const [selectedCompany, setSelectedCompany] = useState<any>(null);
@@ -111,7 +111,7 @@ export default function CompaniesPage() {
             const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/intelligence/enrich`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ companyId: id }),
+                body: JSON.stringify({ companyId: id, type: 'enrich-company' }),
             });
 
             if (!response.ok) throw new Error('Enrichment failed');

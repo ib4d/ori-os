@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 
-import { BarChart3, TrendingUp, Users, DollarSign, Target, Calendar, Download, Loader2, PieChart, Activity, Zap, Mail } from 'lucide-react';
+import { BarChart3, TrendingUp, Users, DollarSign, Target, Calendar, Download, Loader, PieChart, Activity, Zap, Mail } from 'lucide-react';
 import { useAnalytics } from '@/hooks/use-analytics';
 import { exportToCSV } from '@/lib/export';
 import {
@@ -42,7 +42,7 @@ export default function AnalyticsPage() {
     if (isLoading || !data) {
         return (
             <div className="flex h-[400px] items-center justify-center">
-                <Loader2 className="h-8 w-8 animate-spin text-tangerine" />
+                <Loader className="h-8 w-8 animate-spin text-tangerine" />
             </div>
         );
     }
@@ -80,9 +80,9 @@ export default function AnalyticsPage() {
                 {kpis.map((kpi) => (
                     <Card key={kpi.label}>
                         <CardContent className="p-6">
-                            <div className="flex items-center justify-between mb-4">
+                            <div className="flex items-center justify-between mb-4 group">
                                 <span className="text-sm text-muted-foreground">{kpi.label}</span>
-                                <kpi.icon className="h-5 w-5 text-muted-foreground" />
+                                <kpi.icon className="h-5 w-5 text-tangerine transition-transform duration-300 group-hover:-translate-y-0.5" />
                             </div>
                             <div className="text-3xl font-bold text-foreground">{kpi.value}</div>
                             <div className={`text-sm mt-1 ${kpi.trend === 'up' ? 'text-success' : 'text-destructive'}`}>
@@ -142,8 +142,8 @@ export default function AnalyticsPage() {
                                                 <span className="text-sm text-foreground">{source.source}</span>
                                                 <span className="text-sm text-muted-foreground">{source.value}%</span>
                                             </div>
-                                            <div className="h-2 bg-muted rounded-full overflow-hidden">
-                                                <div className={`h-full ${source.color} rounded-full`} style={{ width: `${source.value}%` }} />
+                                            <div className="h-2 bg-muted rounded-none overflow-hidden">
+                                                <div className={`h-full ${source.color} rounded-none`} style={{ width: `${source.value}%` }} />
                                             </div>
                                         </div>
                                     ))}
@@ -171,11 +171,12 @@ export default function AnalyticsPage() {
                                                     <span className="text-sm font-medium">{step.stage}</span>
                                                     <span className="text-sm text-muted-foreground">{step.count} ({percent}%)</span>
                                                 </div>
-                                                <div className="h-4 bg-muted rounded-full overflow-hidden">
+                                                <div className="h-4 bg-muted rounded-none overflow-hidden">
                                                     <motion.div
                                                         initial={{ width: 0 }}
-                                                        animate={{ width: `${percent}%` }}
-                                                        className={`h-full ${color}`}
+                                                        whileInView={{ width: `${percent}%` }}
+                                                        viewport={{ once: true }}
+                                                        className={`h-full ${color} rounded-none`}
                                                     />
                                                 </div>
                                             </div>
@@ -189,11 +190,11 @@ export default function AnalyticsPage() {
                                 <CardTitle>Conversion Insights</CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-4">
-                                <div className="p-4 rounded-sm bg-green-500/10 border border-green-500/20">
+                                <div className="p-4 rounded-none bg-green-500/10 border border-green-500/20">
                                     <div className="text-sm font-medium text-green-700 dark:text-green-400 mb-1">Winning Factor</div>
                                     <p className="text-xs text-muted-foreground">Quick responses in &lt; 5 mins increase close rates by 34%.</p>
                                 </div>
-                                <div className="p-4 rounded-sm bg-tangerine/10 border border-tangerine/20">
+                                <div className="p-4 rounded-none bg-tangerine/10 border border-tangerine/20">
                                     <div className="text-sm font-medium text-tangerine mb-1">Bottleneck Detected</div>
                                     <p className="text-xs text-muted-foreground">High drop-off (62%) between Qualification and Proposal stages.</p>
                                 </div>
@@ -229,7 +230,7 @@ export default function AnalyticsPage() {
                                                 <td className="p-2 text-muted-foreground">{cohort.size}</td>
                                                 {cohort.data.map((val, i) => (
                                                     <td key={i} className="p-2 text-center">
-                                                        <div className={`p-1 rounded-sm ${val > 90 ? 'bg-green-500/40' : val > 85 ? 'bg-green-500/20' : 'bg-green-500/10'}`}>
+                                                        <div className={`p-1 rounded-none ${val > 90 ? 'bg-green-500/40' : val > 85 ? 'bg-green-500/20' : 'bg-green-500/10'}`}>
                                                             {val}%
                                                         </div>
                                                     </td>
@@ -251,10 +252,12 @@ export default function AnalyticsPage() {
                             { name: 'Form Submitted', category: 'Conversion', count: '12K', trend: '+20%', icon: Zap },
                             { name: 'Deal stage Changed', category: 'CRM', count: '4.5K', trend: '+5%', icon: TrendingUp },
                         ].map((event) => (
-                            <Card key={event.name} hover="lift">
+                            <Card key={event.name} hover="lift" className="group">
                                 <CardContent className="p-4 flex items-center justify-between">
                                     <div className="flex items-center gap-4">
-                                        <div className="p-2 rounded-sm bg-muted"><event.icon className="h-5 w-5" /></div>
+                                        <div className="p-2 rounded-none bg-muted group-hover:bg-tangerine/10 transition-colors">
+                                            <event.icon className="h-5 w-5 text-tangerine transition-transform duration-300 group-hover:-translate-y-0.5" />
+                                        </div>
                                         <div>
                                             <div className="font-medium">{event.name}</div>
                                             <div className="text-xs text-muted-foreground">{event.category}</div>

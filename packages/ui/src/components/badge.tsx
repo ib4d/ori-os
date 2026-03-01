@@ -23,9 +23,9 @@ const badgeVariants = cva(
                 glass: 'glass-sm border-white/20',
             },
             rounded: {
-                default: 'rounded-sm',
-                md: 'rounded-md',
-                full: 'rounded-full',
+                default: 'rounded-none',
+                md: 'rounded-none',
+                full: 'rounded-none',
             },
         },
         defaultVariants: {

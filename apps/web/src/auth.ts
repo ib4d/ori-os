@@ -6,7 +6,7 @@ import { PrismaClient } from "@ori-os/db"
 const prisma = new PrismaClient()
 
 const nextAuth = NextAuth({
-    adapter: PrismaAdapter(prisma) as any,
+    adapter: PrismaAdapter(prisma as any),
     providers: [
         Credentials({
             credentials: {

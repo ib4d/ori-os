@@ -68,7 +68,7 @@ export default function FeaturesPage() {
                                 <Link key={i} href={f.href}>
                                     <Card hover="lift" className="bg-muted/30 border-none cursor-pointer group">
                                         <CardContent className="p-8">
-                                            <div className="p-4 rounded-sm bg-background w-fit mb-6 group-hover:bg-tangerine/10 transition-colors">
+                                            <div className="p-4 rounded-none bg-background w-fit mb-6 group-hover:bg-tangerine/10 transition-colors">
                                                 <f.icon className="h-8 w-8 text-foreground group-hover:text-tangerine transition-colors" />
                                             </div>
                                             <h3 className="text-xl font-bold mb-3">{f.title}</h3>

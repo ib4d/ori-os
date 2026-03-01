@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
     Card,
@@ -14,6 +14,7 @@ import {
     TooltipProvider,
     TooltipTrigger,
     useToast,
+    Switch,
 } from '@ori-os/ui';
 import {
     Plus,
@@ -47,12 +48,42 @@ interface WorkflowNode {
 
 export default function AutomationBuilderPage() {
     const { toast } = useToast();
-    const [nodes, setNodes] = useState<WorkflowNode[]>([
-        { id: '1', type: 'trigger', label: 'New Lead Created', icon: Users, status: 'idle', config: {} },
-        { id: '2', type: 'action', label: 'Send Welcome Email', icon: Mail, status: 'idle', config: {} },
-    ]);
+    const [nodes, setNodes] = useState<WorkflowNode[]>([]);
     const [workflowName, setWorkflowName] = useState('New Workflow');
     const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
+    const [workflowId, setWorkflowId] = useState<string | null>(null);
+    const [isActive, setIsActive] = useState(false);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchWorkflow = async () => {
+            try {
+                // For demo, we fetch the first available workflow if no ID in URL
+                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/automations/workflows`);
+                const data = await res.json();
+                const workflow = data[0];
+                if (workflow) {
+                    setWorkflowId(workflow.id);
+                    setWorkflowName(workflow.name);
+                    setIsActive(workflow.status === 'active');
+                    if (workflow.definitionJson) {
+                        const def = workflow.definitionJson;
+                        // Map core definition to UI nodes
+                        const uiNodes: WorkflowNode[] = [
+                            ...(def.triggers || []).map((t: any) => ({ ...t, type: 'trigger' as const, status: 'idle' as const })),
+                            ...(def.nodes || []).map((n: any) => ({ ...n, status: 'idle' as const })),
+                        ];
+                        setNodes(uiNodes);
+                    }
+                }
+            } catch (error) {
+                console.error('Failed to fetch workflow:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchWorkflow();
+    }, []);
 
     const selectedNode = nodes.find(n => n.id === selectedNodeId);
 
@@ -110,11 +141,39 @@ export default function AutomationBuilderPage() {
         }
     };
 
-    const handleRunPreview = () => {
-        toast({
-            title: "Preview Started",
-            description: "Running a test execution of this workflow...",
-        });
+    const handleRunPreview = async () => {
+        if (!workflowId) return;
+        try {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/automations/workflows/${workflowId}/test`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ payload: { test: true } }),
+            });
+            if (res.ok) {
+                toast({
+                    title: "Test Run Started",
+                    description: "Execution has been enqueued in the background.",
+                });
+            }
+        } catch (error) {
+            toast({ title: "Test Failed", variant: "destructive" });
+        }
+    };
+
+    const toggleStatus = async () => {
+        if (!workflowId) return;
+        const newStatus = isActive ? 'inactive' : 'active';
+        try {
+            await fetch(`${process.env.NEXT_PUBLIC_API_URL}/automations/workflows/${workflowId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ status: newStatus }),
+            });
+            setIsActive(!isActive);
+            toast({ title: `Workflow ${newStatus === 'active' ? 'Activated' : 'Paused'}` });
+        } catch (error) {
+            toast({ title: "Update Failed", variant: "destructive" });
+        }
     };
 
     return (
@@ -138,6 +197,10 @@ export default function AutomationBuilderPage() {
                 </div>
 
                 <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 mr-4 bg-muted/50 px-3 py-1 border border-border">
+                        <span className="text-[10px] font-bold uppercase tracking-wider">{isActive ? 'Active' : 'Paused'}</span>
+                        <Switch checked={isActive} onCheckedChange={toggleStatus} />
+                    </div>
                     <TooltipProvider>
                         <Tooltip>
                             <TooltipTrigger asChild>
@@ -174,8 +237,8 @@ export default function AutomationBuilderPage() {
                                 { icon: Mail, label: 'Email Received' },
                                 { icon: Database, label: 'Form Submission' },
                             ].map(item => (
-                                <div key={item.label} className="p-3 rounded-sm border border-border bg-muted/30 hover:bg-muted cursor-move flex items-center gap-3 text-sm font-medium transition-colors">
-                                    <div className="p-1.5 rounded-sm bg-tangerine/10">
+                                <div key={item.label} className="p-3 rounded-none border border-border bg-muted/30 hover:bg-muted cursor-move flex items-center gap-3 text-sm font-medium transition-colors">
+                                    <div className="p-1.5 rounded-none bg-tangerine/10">
                                         <item.icon className="h-4 w-4 text-tangerine" />
                                     </div>
                                     {item.label}
@@ -195,10 +258,10 @@ export default function AutomationBuilderPage() {
                             ].map(item => (
                                 <div
                                     key={item.label}
-                                    className="p-3 rounded-sm border border-border bg-muted/30 hover:bg-muted cursor-pointer flex items-center gap-3 text-sm font-medium transition-colors"
+                                    className="p-3 rounded-none border border-border bg-muted/30 hover:bg-muted cursor-pointer flex items-center gap-3 text-sm font-medium transition-colors"
                                     onClick={() => addNode('action')}
                                 >
-                                    <div className={`p-1.5 rounded-sm ${item.color.replace('text', 'bg')}/10`}>
+                                    <div className={`p-1.5 rounded-none ${item.color.replace('text', 'bg')}/10`}>
                                         <item.icon className={`h-4 w-4 ${item.color}`} />
                                     </div>
                                     {item.label}
@@ -228,7 +291,7 @@ export default function AutomationBuilderPage() {
                                         <CardContent className="p-4">
                                             <div className="flex items-start justify-between">
                                                 <div className="flex items-center gap-3">
-                                                    <div className={`p-2 rounded-sm ${node.type === 'trigger' ? 'bg-tangerine/10' : 'bg-muted'}`}>
+                                                    <div className={`p-2 rounded-none ${node.type === 'trigger' ? 'bg-tangerine/10' : 'bg-muted'}`}>
                                                         <node.icon className={`h-5 w-5 ${node.type === 'trigger' ? 'text-tangerine' : 'text-foreground'}`} />
                                                     </div>
                                                     <div>
@@ -251,7 +314,7 @@ export default function AutomationBuilderPage() {
                                     {/* Connection Line */}
                                     {index < nodes.length - 1 && (
                                         <div className="absolute top-full left-1/2 -translate-x-1/2 h-12 w-0.5 bg-gradient-to-b from-border to-border/50">
-                                            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 p-1 rounded-full bg-border">
+                                            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 p-1 rounded-none bg-border">
                                                 <Plus className="h-3 w-3 text-white" />
                                             </div>
                                         </div>
@@ -279,8 +342,8 @@ export default function AutomationBuilderPage() {
                     <div className="flex-1 overflow-y-auto">
                         {selectedNode ? (
                             <div className="p-6 space-y-6">
-                                <div className="flex items-center gap-3 p-4 rounded-sm bg-muted/30 border border-border">
-                                    <div className={`p-2 rounded-sm ${selectedNode.type === 'trigger' ? 'bg-tangerine/10' : 'bg-muted'}`}>
+                                <div className="flex items-center gap-3 p-4 rounded-none bg-muted/30 border border-border">
+                                    <div className={`p-2 rounded-none ${selectedNode.type === 'trigger' ? 'bg-tangerine/10' : 'bg-muted'}`}>
                                         <selectedNode.icon className={`h-5 w-5 ${selectedNode.type === 'trigger' ? 'text-tangerine' : 'text-foreground'}`} />
                                     </div>
                                     <div>
@@ -305,7 +368,7 @@ export default function AutomationBuilderPage() {
 
                                     {selectedNode.type === 'trigger' ? (
                                         <div className="space-y-4">
-                                            <div className="p-3 rounded-sm border border-tangerine/20 bg-tangerine/5 text-xs text-tangerine leading-relaxed">
+                                            <div className="p-3 rounded-none border border-tangerine/20 bg-tangerine/5 text-xs text-tangerine leading-relaxed">
                                                 This workflow will start automatically whenever a new lead is created in your CRM.
                                             </div>
                                             <div className="space-y-2">
@@ -317,7 +380,7 @@ export default function AutomationBuilderPage() {
                                         <div className="space-y-4">
                                             <div className="space-y-2">
                                                 <Label>Action Settings</Label>
-                                                <div className="p-4 rounded-sm border border-border text-xs text-muted-foreground italic">
+                                                <div className="p-4 rounded-none border border-border text-xs text-muted-foreground italic">
                                                     Configure how this action behaves when triggered.
                                                 </div>
                                             </div>

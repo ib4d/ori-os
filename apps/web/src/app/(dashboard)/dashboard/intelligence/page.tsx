@@ -83,7 +83,7 @@ export default function IntelligencePage() {
                                     <p>Loading enrichment jobs...</p>
                                 </div>
                             ) : jobs.length > 0 ? (
-                                <div className="rounded-sm border border-border overflow-hidden">
+                                <div className="rounded-none border border-border overflow-hidden">
                                     <Table>
                                         <TableHeader className="bg-muted/50">
                                             <TableRow>

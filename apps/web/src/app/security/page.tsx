@@ -50,7 +50,7 @@ export default function SecurityPage() {
                             {coreSecurity.map((s, i) => (
                                 <Card key={i} className="bg-muted/30 border-none">
                                     <CardContent className="p-8 flex gap-6">
-                                        <div className="p-4 rounded-sm bg-background w-fit h-fit shrink-0">
+                                        <div className="p-4 rounded-none bg-background w-fit h-fit shrink-0">
                                             <s.icon className="h-8 w-8 text-tangerine" />
                                         </div>
                                         <div>
@@ -70,7 +70,7 @@ export default function SecurityPage() {
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
                             {['SOC 2 Type II', 'GDPR Compliant', 'HIPAA Ready', 'CCPA Compliant'].map((item) => (
                                 <div key={item} className="flex flex-col items-center gap-4 text-center">
-                                    <div className="h-20 w-20 rounded-full bg-background flex items-center justify-center border border-tangerine/20 border-dashed">
+                                    <div className="h-20 w-20 rounded-none bg-background flex items-center justify-center border border-tangerine/20 border-dashed">
                                         <CheckCircle2 className="h-8 w-8 text-tangerine" />
                                     </div>
                                     <span className="font-semibold text-sm">{item}</span>

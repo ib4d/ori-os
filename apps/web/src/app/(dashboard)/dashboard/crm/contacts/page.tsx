@@ -35,7 +35,7 @@ import { useToast } from '@ori-os/ui';
 import { ContactDetailsModal } from '../../../../../components/crm/contact-details-modal';
 
 export default function ContactsPage() {
-    const { contacts, isLoading, refresh } = useContacts();
+    const { contacts, isLoading, error, refresh } = useContacts();
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
     const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
     const [selectedContact, setSelectedContact] = useState<any>(null);
@@ -114,7 +114,7 @@ export default function ContactsPage() {
             const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/intelligence/enrich`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ contactId: id }),
+                body: JSON.stringify({ contactId: id, type: 'enrich-contact' }),
             });
 
             if (!response.ok) throw new Error('Enrichment failed');
@@ -184,7 +184,7 @@ export default function ContactsPage() {
                         <Input
                             placeholder="Search contacts..."
                             className="flex-1"
-                            icon={<Search className="h-4 w-4" />}
+                            icon={<Search className="h-4 w-4 text-tangerine" />}
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                         />
@@ -258,8 +258,8 @@ export default function ContactsPage() {
                                         </td>
                                         <td className="p-4">
                                             <div className="flex items-center gap-3">
-                                                <Avatar>
-                                                    <AvatarFallback>
+                                                <Avatar className="rounded-none">
+                                                    <AvatarFallback className="rounded-none">
                                                         {contact.name?.split(' ').map(n => n[0]).join('').toUpperCase()}
                                                     </AvatarFallback>
                                                 </Avatar>
@@ -271,8 +271,8 @@ export default function ContactsPage() {
                                                         {contact.jobTitle}
                                                     </div>
                                                     <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground">
-                                                        <span className="flex items-center gap-1">
-                                                            <Mail className="h-3 w-3" />
+                                                        <span className="flex items-center gap-1 group/item">
+                                                            <Mail className="h-3 w-3 text-tangerine/60 group-hover/item:text-tangerine transition-colors" />
                                                             {contact.email}
                                                         </span>
                                                     </div>
@@ -280,14 +280,14 @@ export default function ContactsPage() {
                                             </div>
                                         </td>
                                         <td className="p-4 hidden md:table-cell">
-                                            <div className="flex items-center gap-2">
-                                                <Building2 className="h-4 w-4 text-muted-foreground" />
+                                            <div className="flex items-center gap-2 group/item">
+                                                <Building2 className="h-4 w-4 text-tangerine/60 group-hover/item:text-tangerine transition-colors" />
                                                 <span className="text-foreground">{contact.company}</span>
                                             </div>
                                         </td>
                                         <td className="p-4 hidden lg:table-cell">
-                                            <div className="flex items-center gap-2">
-                                                <MapPin className="h-4 w-4 text-muted-foreground" />
+                                            <div className="flex items-center gap-2 group/item">
+                                                <MapPin className="h-4 w-4 text-tangerine/60 group-hover/item:text-tangerine transition-colors" />
                                                 <span className="text-muted-foreground">
                                                     {contact.location}
                                                 </span>
@@ -329,6 +329,9 @@ export default function ContactsPage() {
                                                     <DropdownMenuItem onClick={() => {
                                                         toast({ title: 'Added to Sequence', description: `${contact.name} added to outreach.` });
                                                     }}>Add to Sequence</DropdownMenuItem>
+                                                    <DropdownMenuItem onClick={() => {
+                                                        toast({ title: 'Email Editor Opened', description: `Drafting email to ${contact.email}.` });
+                                                    }}>Send Email</DropdownMenuItem>
                                                     <DropdownMenuItem
                                                         className="text-destructive"
                                                         onClick={() => handleDelete(contact.id)}

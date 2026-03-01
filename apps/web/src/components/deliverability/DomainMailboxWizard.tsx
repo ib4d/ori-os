@@ -66,7 +66,7 @@ export function DomainMailboxWizard() {
                                 value={domain}
                                 onChange={(e) => setDomain(e.target.value)}
                             />
-                            <div className="p-3 bg-primary/5 border border-primary/20 rounded-md flex items-start space-x-2">
+                            <div className="p-3 bg-primary/5 border border-primary/20 rounded-none flex items-start space-x-2">
                                 <AlertCircle className="h-4 w-4 text-primary mt-0.5" />
                                 <p className="text-xs text-muted-foreground">
                                     <strong>Recommendation:</strong> Use a subdomain for cold outreach to protect your main domain's reputation.
@@ -108,7 +108,7 @@ export function DomainMailboxWizard() {
             case 3:
                 return (
                     <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="space-y-6 text-center py-4">
-                        <div className="inline-block p-4 rounded-full bg-success/10 text-success mb-2">
+                        <div className="inline-block p-4 rounded-none bg-success/10 text-success mb-2">
                             <ShieldCheck className="h-8 w-8" />
                         </div>
                         <div className="space-y-2">
@@ -199,7 +199,7 @@ export function DomainMailboxWizard() {
                     </div>
                     <div className="flex gap-1">
                         {STEPS.map(s => (
-                            <div key={s.id} className={`h-1.5 flex-1 rounded-full transition-all duration-500 ${currentStep >= s.id ? 'bg-primary' : 'bg-muted-foreground/20'}`} />
+                            <div key={s.id} className={`h-1.5 flex-1 rounded-none transition-all duration-500 ${currentStep >= s.id ? 'bg-primary' : 'bg-muted-foreground/20'}`} />
                         ))}
                     </div>
                 </div>

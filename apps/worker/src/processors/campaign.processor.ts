@@ -11,10 +11,12 @@ export class CampaignProcessor extends WorkerHost {
     constructor(
         private readonly prisma: PrismaService,
         @InjectQueue('email-queue') private readonly emailQueue: Queue,
-        @InjectQueue('campaign-queue') private readonly campaignQueue: Queue
+        @InjectQueue('campaign-queue') private readonly campaignQueue: Queue,
+        @InjectQueue('workflow-run') private readonly workflowQueue: Queue
     ) {
         super();
     }
+    Joe
 
     async process(job: Job<any, any, string>): Promise<any> {
         const { campaignId, recipientId, stepOrder } = job.data;
@@ -27,11 +29,43 @@ export class CampaignProcessor extends WorkerHost {
 
         if (!step) {
             this.logger.log(`No more steps for recipient ${recipientId} in campaign ${campaignId}`);
-            // Mark recipient as completed or update status
+
+            // 1. Mark recipient as completed
             await (this.prisma as any).campaignRecipient.update({
                 where: { id: recipientId },
                 data: { status: 'COMPLETED' }
             });
+
+            // 2. Trigger workflow.campaign.completed
+            // Fetch campaign and recipient info for context
+            const recipient = await (this.prisma as any).campaignRecipient.findUnique({
+                where: { id: recipientId },
+                include: { contact: true, campaign: true }
+            });
+
+            if (recipient) {
+                const workflows = await (this.prisma as any).workflow.findMany({
+                    where: {
+                        organizationId: recipient.campaign.organizationId,
+                        triggerType: 'trigger.campaign.completed',
+                        status: 'active',
+                    },
+                });
+
+                for (const workflow of workflows) {
+                    await this.workflowQueue.add('workflow-run', {
+                        workflowId: workflow.id,
+                        triggerPayload: {
+                            campaignId: recipient.campaignId,
+                            campaignName: recipient.campaign.name,
+                            contactId: recipient.contactId,
+                            contactEmail: recipient.contact.email,
+                            recipientId: recipient.id,
+                        },
+                    });
+                }
+            }
+
             return { status: 'completed' };
         }
 

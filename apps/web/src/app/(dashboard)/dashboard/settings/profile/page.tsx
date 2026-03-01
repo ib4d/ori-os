@@ -62,7 +62,7 @@ export default function ProfileSettingsPage() {
                                 <AvatarImage src={user.image || `https://api.dicebear.com/7.x/initials/svg?seed=${user.name}`} />
                                 <AvatarFallback className="text-2xl">{user.name?.[0]}</AvatarFallback>
                             </Avatar>
-                            <div className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
+                            <div className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-none opacity-0 group-hover:opacity-100 transition-opacity">
                                 <Camera className="h-8 w-8 text-white" />
                             </div>
                         </div>

@@ -14,6 +14,14 @@ export interface Company {
     contactsCount: number
 }
 
+const MOCK_COMPANIES: Company[] = [
+    { id: 'm1', name: 'Acme Corp', domain: 'acmecorp.com', industry: 'Technology', size: '500-1000', location: 'Austin, US', status: 'Customer', contactsCount: 8 },
+    { id: 'm2', name: 'TechFlow', domain: 'techflow.io', industry: 'SaaS', size: '50-200', location: 'San Francisco, US', status: 'Customer', contactsCount: 3 },
+    { id: 'm3', name: 'DataVault', domain: 'datavault.eu', industry: 'Data & Analytics', size: '200-500', location: 'Berlin, DE', status: 'Prospect', contactsCount: 5 },
+    { id: 'm4', name: 'CloudSync', domain: 'cloudsync.io', industry: 'Infrastructure', size: '10-50', location: 'London, UK', status: 'Lead', contactsCount: 2 },
+    { id: 'm5', name: 'NexusAI', domain: 'nexusai.com', industry: 'Artificial Intelligence', size: '10-50', location: 'Bengaluru, IN', status: 'Lead', contactsCount: 1 },
+]
+
 export function useCompanies() {
     const [companies, setCompanies] = useState<Company[]>([])
     const [isLoading, setIsLoading] = useState(true)
@@ -29,18 +37,17 @@ export function useCompanies() {
             const normalizedData = data.map((c: any) => ({
                 ...c,
                 status: c.status || 'Prospect',
-                contactsCount: c.contacts?.length || 0,
+                location: c.city ? `${c.city}, ${c.country || ''}`.trim().replace(/,$/, '') : (c.country || '—'),
+                size: c.sizeBand || c.size || '—',
+                contactsCount: c._count?.contacts ?? c.contacts?.length ?? 0,
             }))
 
             setCompanies(normalizedData)
             setError(null)
         } catch (err) {
-            console.error('Fetch companies failed, using mock data:', err)
-            setError(err instanceof Error ? err.message : "Something went wrong")
-            setCompanies([
-                { id: '1', name: 'TechCorp', domain: 'techcorp.com', industry: 'Technology', size: '500-1000', location: 'San Francisco, CA', status: 'Customer', contactsCount: 12 },
-                { id: '2', name: 'ScaleUp Inc', domain: 'scaleup.io', industry: 'SaaS', size: '100-250', location: 'New York, NY', status: 'Prospect', contactsCount: 8 }
-            ])
+            console.warn('[Companies] API unavailable, using demo data')
+            setCompanies(MOCK_COMPANIES)
+            setError(null)
         } finally {
             setIsLoading(false)
         }
@@ -52,3 +59,4 @@ export function useCompanies() {
 
     return { companies, isLoading, error, refresh: fetchCompanies }
 }
+

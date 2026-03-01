@@ -32,13 +32,13 @@ export default function WorkflowsPage() {
             {/* Automation Stats */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 {[
-                    { label: 'Active Automations', value: workflows.filter(w => w.status === 'Active').length, icon: Zap, color: 'text-tangerine' },
+                    { label: 'Active Automations', value: workflows.filter(w => w.status === 'active').length, icon: Zap, color: 'text-tangerine' },
                     { label: 'Runs this month', value: '1,284', icon: Play, color: 'text-blue-500' },
                     { label: 'Time Saved', value: '42h', icon: Clock, color: 'text-green-500' },
                 ].map((stat) => (
                     <Card key={stat.label}>
                         <CardContent className="p-4 flex items-center gap-4">
-                            <div className={`p-2 rounded-sm bg-muted`}>
+                            <div className={`p-2 rounded-none bg-muted`}>
                                 <stat.icon className={`h-5 w-5 ${stat.color}`} />
                             </div>
                             <div>
@@ -65,7 +65,7 @@ export default function WorkflowsPage() {
                                     <div className="space-y-1">
                                         <div className="flex items-center gap-3">
                                             <h3 className="text-lg font-semibold text-foreground">{workflow.name}</h3>
-                                            <Badge variant={workflow.status === 'Active' ? 'success' : 'secondary'}>
+                                            <Badge variant={workflow.status === 'active' ? 'success' : 'secondary'}>
                                                 {workflow.status}
                                             </Badge>
                                         </div>
@@ -75,7 +75,7 @@ export default function WorkflowsPage() {
                                     </div>
                                     <div className="flex items-center gap-2">
                                         <Button variant="ghost" size="icon-sm">
-                                            {workflow.status === 'Active' ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
+                                            {workflow.status === 'active' ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
                                         </Button>
                                         <Button variant="ghost" size="icon-sm">
                                             <Settings className="h-4 w-4" />

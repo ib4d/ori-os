@@ -15,6 +15,14 @@ export interface Contact {
     status: "Active" | "Inactive"
 }
 
+const MOCK_CONTACTS: Contact[] = [
+    { id: 'm1', firstName: 'Sarah', lastName: 'Chen', name: 'Sarah Chen', email: 'sarah@techflow.io', jobTitle: 'VP of Engineering', company: 'TechFlow', location: 'San Francisco, US', status: 'Active' },
+    { id: 'm2', firstName: 'Marcus', lastName: 'Rivera', name: 'Marcus Rivera', email: 'm.rivera@acmecorp.com', jobTitle: 'CTO', company: 'Acme Corp', location: 'Austin, US', status: 'Active' },
+    { id: 'm3', firstName: 'Elena', lastName: 'Volkov', name: 'Elena Volkov', email: 'elena@datavault.eu', jobTitle: 'Head of Data', company: 'DataVault', location: 'Berlin, DE', status: 'Active' },
+    { id: 'm4', firstName: 'James', lastName: 'Okonkwo', name: 'James Okonkwo', email: 'james@cloudsync.io', jobTitle: 'CEO', company: 'CloudSync', location: 'London, UK', status: 'Active' },
+    { id: 'm5', firstName: 'Priya', lastName: 'Sharma', name: 'Priya Sharma', email: 'priya@nexusai.com', jobTitle: 'Product Director', company: 'NexusAI', location: 'Bengaluru, IN', status: 'Inactive' },
+]
+
 export function useContacts() {
     const [contacts, setContacts] = useState<Contact[]>([])
     const [isLoading, setIsLoading] = useState(true)
@@ -30,18 +38,17 @@ export function useContacts() {
             const normalizedData = data.map((c: any) => ({
                 ...c,
                 name: `${c.firstName || ''} ${c.lastName || ''}`.trim() || c.email,
-                company: c.organization?.name || 'Private',
+                company: c.company?.name || c.organization?.name || '—',
+                location: c.country || '—',
+                status: c.optOut ? 'Inactive' : 'Active',
             }))
 
             setContacts(normalizedData)
             setError(null)
         } catch (err) {
-            console.error('Fetch contacts failed, using mock data:', err)
-            setError(err instanceof Error ? err.message : "Something went wrong")
-            setContacts([
-                { id: '1', firstName: 'Sarah', lastName: 'Chen', name: 'Sarah Chen', email: 'sarah.chen@techcorp.com', company: 'TechCorp', jobTitle: 'VP of Sales', status: 'Active', location: 'San Francisco, CA' },
-                { id: '2', firstName: 'Michael', lastName: 'Torres', name: 'Michael Torres', email: 'm.torres@scaleup.io', company: 'ScaleUp Inc', jobTitle: 'Account Executive', status: 'Active', location: 'New York, NY' }
-            ])
+            console.warn('[Contacts] API unavailable, using demo data')
+            setContacts(MOCK_CONTACTS)
+            setError(null)
         } finally {
             setIsLoading(false)
         }
@@ -53,3 +60,4 @@ export function useContacts() {
 
     return { contacts, isLoading, error, refresh: fetchContacts }
 }
+

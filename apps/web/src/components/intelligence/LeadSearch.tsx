@@ -13,35 +13,27 @@ export function LeadSearch() {
     const [enrichingId, setEnrichingId] = useState<string | null>(null);
     const { toast } = useToast();
 
-    const handleSearch = () => {
+    const handleSearch = async () => {
         if (!query) return;
         setIsSearching(true);
-        // Simulate API call
-        setTimeout(() => {
-            setResults([
-                {
-                    id: 'res-1',
-                    name: query.toUpperCase(),
-                    domain: query.toLowerCase() + '.com',
-                    industry: 'Technology',
-                    size: '11-50',
-                    location: 'Remote',
-                    description: 'A cutting edge startup working on AI solutions.',
-                    saved: false,
-                },
-                {
-                    id: 'res-2',
-                    name: 'ACORP',
-                    domain: 'acorp.io',
-                    industry: 'Marketing',
-                    size: '50-200',
-                    location: 'London, UK',
-                    description: 'Global advertising agency with AI-powered analytics.',
-                    saved: false,
-                }
-            ]);
+        try {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/intelligence/search?q=${encodeURIComponent(query)}`);
+            if (!response.ok) throw new Error('Search failed');
+            const data = await response.json();
+
+            // Format to match expected results and add saved state tracking locally
+            setResults((data || []).map((r: any) => ({ ...r, saved: false })));
+        } catch (error) {
+            console.error('Lead search error:', error);
+            toast({
+                title: "Search Failed",
+                description: "There was an error while searching for leads.",
+                variant: 'destructive',
+            });
+            setResults([]);
+        } finally {
             setIsSearching(false);
-        }, 1500);
+        }
     };
 
     const handleEnrich = async (id: string, domain: string) => {
@@ -50,7 +42,7 @@ export function LeadSearch() {
             const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/intelligence/enrich`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ domain }),
+                body: JSON.stringify({ domain, type: 'enrich-company' }),
             });
 
             if (!response.ok) throw new Error('Enrichment failed');
@@ -69,12 +61,36 @@ export function LeadSearch() {
         }
     };
 
-    const handleSaveToCRM = (id: string, name: string) => {
-        setResults(prev => prev.map(r => r.id === id ? { ...r, saved: true } : r));
-        toast({
-            title: "Lead Saved",
-            description: `${name} has been added to your CRM contacts.`,
-        });
+    const handleSaveToCRM = async (company: any) => {
+        setResults(prev => prev.map(r => r.id === company.id ? { ...r, saved: true } : r));
+        try {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/crm/companies`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    name: company.name,
+                    domain: company.domain,
+                    industry: company.industry,
+                    sizeBand: company.size,
+                    location: company.location,
+                    description: company.description,
+                })
+            });
+
+            if (!res.ok) throw new Error('Failed to save');
+
+            toast({
+                title: "Lead Saved",
+                description: `${company.name} has been added to your CRM companies.`,
+            });
+        } catch (error) {
+            toast({
+                title: "Save Failed",
+                description: `Could not save ${company.name} to CRM.`,
+                variant: 'destructive',
+            });
+            setResults(prev => prev.map(r => r.id === company.id ? { ...r, saved: false } : r));
+        }
     };
 
     return (
@@ -135,7 +151,7 @@ export function LeadSearch() {
                                 variant={result.saved ? "outline" : "ghost"}
                                 size="sm"
                                 className="flex-1"
-                                onClick={() => handleSaveToCRM(result.id, result.name)}
+                                onClick={() => handleSaveToCRM(result)}
                                 disabled={result.saved}
                             >
                                 {result.saved ? <Check className="mr-2 h-4 w-4 text-success" /> : <Plus className="mr-2 h-4 w-4" />}

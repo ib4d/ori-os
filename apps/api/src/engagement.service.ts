@@ -1,170 +1,187 @@
-
-import { Injectable, NotFoundException, OnModuleInit } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '@ori-os/db/nestjs';
-import { CreateCampaignDto, UpdateCampaignDto } from './dto/campaign.dto';
+import { CreateCampaignDto, UpdateCampaignDto, CampaignStatus } from './dto/campaign.dto';
 import { EmailService } from './email.service';
+import { InjectQueue } from '@nestjs/bullmq';
+import { Queue } from 'bullmq';
 
 @Injectable()
-export class EngagementService implements OnModuleInit {
-    constructor(
-        private readonly prisma: PrismaService,
-        private readonly email: EmailService
-    ) { }
+export class EngagementService {
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly email: EmailService,
+    @InjectQueue('campaign-queue') private readonly campaignQueue: Queue,
+  ) { }
 
-    async onModuleInit() {
-        console.log('[CAMPAIGN] Initializing Execution Engine...');
-        // Run every 10 seconds for dev/demo purposes, in production this would be a CRON job or BullMQ worker
-        setInterval(() => {
-            this.processRunningCampaigns().catch(err => console.error('[CAMPAIGN] Execution Error:', err));
-        }, 10000);
-    }
+  async createCampaign(orgId: string, userId: string, dto: CreateCampaignDto) {
+    const { sequenceSteps, ...campaignData } = dto;
 
-
-    async createCampaign(orgId: string, userId: string, dto: CreateCampaignDto) {
-        const { sequenceSteps, ...campaignData } = dto;
-
-        return (this.prisma as any).campaign.create({
-            data: {
-                ...campaignData,
-                organizationId: orgId,
-                createdBy: userId,
-                sequenceSteps: sequenceSteps ? {
-                    create: sequenceSteps.map(step => ({
-                        ...step,
-                    }))
-                } : undefined
-            },
-            include: { sequenceSteps: true }
-        });
-    }
-
-    async findAll(orgId: string) {
-        return (this.prisma as any).campaign.findMany({
-            where: { organizationId: orgId },
-            include: { sequenceSteps: true, _count: { select: { recipients: true } } },
-            orderBy: { createdAt: 'desc' }
-        });
-    }
-
-    async findOne(orgId: string, id: string) {
-        const campaign = await (this.prisma as any).campaign.findFirst({
-            where: { id, organizationId: orgId },
-            include: { sequenceSteps: true, recipients: { include: { contact: true } } }
-        });
-
-        if (!campaign) throw new NotFoundException('Campaign not found');
-        return campaign;
-    }
-
-    async updateCampaign(orgId: string, id: string, dto: UpdateCampaignDto) {
-        const { sequenceSteps, ...campaignData } = dto;
-
-        // For simplicity in MVP, we'll replace steps if provided or just update metadata
-        // In a real app, we might want more granular sync of steps
-
-        await (this.prisma as any).campaign.update({
-            where: { id },
-            data: {
-                ...campaignData,
-                sequenceSteps: sequenceSteps ? {
-                    deleteMany: {},
-                    create: sequenceSteps.map(step => ({
-                        ...step,
-                    }))
-                } : undefined
-            }
-        });
-
-        return this.findOne(orgId, id);
-    }
-
-    async deleteCampaign(orgId: string, id: string) {
-        return (this.prisma as any).campaign.delete({
-            where: { id, organizationId: orgId }
-        });
-    }
-
-    async addRecipients(orgId: string, campaignId: string, contactIds: string[]) {
-        return (this.prisma as any).campaignRecipient.createMany({
-            data: contactIds.map(contactId => ({
-                campaignId,
-                contactId,
+    const campaign = await (this.prisma as any).campaign.create({
+      data: {
+        ...campaignData,
+        organizationId: orgId,
+        createdBy: userId,
+        sequenceSteps: sequenceSteps
+          ? {
+            create: sequenceSteps.map((step) => ({
+              ...step,
             })),
-            skipDuplicates: true
-        });
+          }
+          : undefined,
+      },
+      include: { sequenceSteps: true },
+    });
+
+    if (campaign.status === CampaignStatus.RUNNING) {
+      await this.startCampaignExecution(campaign.id);
     }
 
-    // --- Execution Engine ---
+    return campaign;
+  }
 
-    async processRunningCampaigns() {
-        const campaigns = await (this.prisma as any).campaign.findMany({
-            where: { status: 'RUNNING' },
-            include: { sequenceSteps: { orderBy: { order: 'asc' } } }
-        });
+  async findAll(orgId: string) {
+    const campaigns = await (this.prisma as any).campaign.findMany({
+      where: { organizationId: orgId },
+      include: {
+        sequenceSteps: { orderBy: { order: 'asc' } },
+        _count: { select: { recipients: true } },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
 
-        for (const campaign of campaigns) {
-            const recipients = await (this.prisma as any).campaignRecipient.findMany({
-                where: {
-                    campaignId: campaign.id,
-                    status: { in: ['PENDING', 'SCHEDULED'] }
-                },
-                include: { contact: true }
-            });
+    // In a real app, we'd use a more efficient way to get these counts (e.g. raw SQL or a metrics table)
+    // For MVP, we'll fetch them per campaign or in a batch
+    return Promise.all(
+      campaigns.map(async (c: any) => {
+        const [sent, replies] = await Promise.all([
+          (this.prisma as any).emailEvent.count({
+            where: { campaignId: c.id, eventType: 'SENT' },
+          }),
+          (this.prisma as any).emailEvent.count({
+            where: { campaignId: c.id, eventType: 'REPLY' },
+          }),
+        ]);
+        return {
+          ...c,
+          sent,
+          replies,
+        };
+      }),
+    );
+  }
 
-            for (const recipient of recipients) {
-                await this.processRecipient(campaign, recipient);
-            }
-        }
+  async findOne(orgId: string, id: string) {
+    const campaign = await (this.prisma as any).campaign.findFirst({
+      where: { id, organizationId: orgId },
+      include: {
+        sequenceSteps: { orderBy: { order: 'asc' } },
+        recipients: { include: { contact: true } },
+      },
+    });
+
+    if (!campaign) throw new NotFoundException('Campaign not found');
+    return campaign;
+  }
+
+  async updateCampaign(orgId: string, id: string, dto: UpdateCampaignDto) {
+    const { sequenceSteps, ...campaignData } = dto;
+
+    const oldCampaign = await this.findOne(orgId, id);
+
+    const updatedCampaign = await (this.prisma as any).campaign.update({
+      where: { id },
+      data: {
+        ...campaignData,
+        sequenceSteps: sequenceSteps
+          ? {
+            deleteMany: {},
+            create: sequenceSteps.map((step) => ({
+              ...step,
+            })),
+          }
+          : undefined,
+      },
+      include: { sequenceSteps: true },
+    });
+
+    if (
+      updatedCampaign.status === CampaignStatus.RUNNING &&
+      oldCampaign.status !== CampaignStatus.RUNNING
+    ) {
+      await this.startCampaignExecution(updatedCampaign.id);
     }
 
-    private async processRecipient(campaign: any, recipient: any) {
-        const steps = campaign.sequenceSteps;
-        const currentStepIndex = recipient.lastStepOrder; // 0-indexed or 1-indexed? Let's assume 0 is "not started"
+    return updatedCampaign;
+  }
 
-        const nextStep = steps.find(s => s.order > currentStepIndex);
-        if (!nextStep) {
-            await (this.prisma as any).campaignRecipient.update({
-                where: { id: recipient.id },
-                data: { status: 'COMPLETED' }
-            });
-            return;
-        }
+  async deleteCampaign(orgId: string, id: string) {
+    return (this.prisma as any).campaign.delete({
+      where: { id, organizationId: orgId },
+    });
+  }
 
-        if (nextStep.stepType === 'WAIT') {
-            const config = nextStep.configJson as any;
-            const waitHours = config.hours || 0;
-            const waitDays = config.days || 0;
-            const totalWaitMs = (waitHours * 3600 + waitDays * 86400) * 1000;
+  async addRecipients(orgId: string, campaignId: string, contactIds: string[]) {
+    const result = await (this.prisma as any).campaignRecipient.createMany({
+      data: contactIds.map((contactId) => ({
+        campaignId,
+        contactId,
+        status: 'PENDING',
+      })),
+      skipDuplicates: true,
+    });
 
-            const lastEvent = recipient.lastEventAt || recipient.createdAt;
-            if (Date.now() - new Date(lastEvent).getTime() < totalWaitMs) {
-                return; // Still waiting
-            }
+    const campaign = await (this.prisma as any).campaign.findUnique({
+      where: { id: campaignId },
+    });
 
-            // Move to next step after wait
-            await (this.prisma as any).campaignRecipient.update({
-                where: { id: recipient.id },
-                data: { lastStepOrder: nextStep.order, lastEventAt: new Date() }
-            });
-            // Recurse to process the step following the wait
-            const updatedRecipient = { ...recipient, lastStepOrder: nextStep.order, lastEventAt: new Date() };
-            return this.processRecipient(campaign, updatedRecipient);
-        }
-
-        if (nextStep.stepType === 'EMAIL') {
-            console.log(`[CAMPAIGN] Sending email to ${recipient.contact.email} for step ${nextStep.order}`);
-
-            // Actually call the email service
-            await this.email.sendSequenceEmail(recipient.contact.email, campaign.name, "Sequence email content...");
-
-            await (this.prisma as any).campaignRecipient.update({
-                where: { id: recipient.id },
-                data: {
-                    status: 'SENT',
-                    lastStepOrder: nextStep.order,
-                    lastEventAt: new Date()
-                }
-            });
-        }
+    if (campaign && campaign.status === CampaignStatus.RUNNING) {
+      await this.startCampaignExecution(campaignId);
     }
+
+    return result;
+  }
+
+  // --- Execution Engine ---
+
+  async startCampaignExecution(campaignId: string) {
+    console.log(`[CAMPAIGN] Starting execution for campaign ${campaignId}`);
+
+    const recipients = await (this.prisma as any).campaignRecipient.findMany({
+      where: {
+        campaignId,
+        status: 'PENDING',
+      },
+    });
+
+    console.log(
+      `[CAMPAIGN] Found ${recipients.length} pending recipients to enqueue`,
+    );
+
+    for (const recipient of recipients) {
+      await (this.prisma as any).campaignRecipient.update({
+        where: { id: recipient.id },
+        data: { status: 'SCHEDULED' },
+      });
+
+      await this.campaignQueue.add('process-step', {
+        campaignId,
+        recipientId: recipient.id,
+        stepOrder: 1, // Start with the first step
+      });
+    }
+  }
+
+  /**
+   * Manual trigger to ensure all running campaigns are actually being processed.
+   * Useful if some jobs were lost or the system was down.
+   */
+  async processRunningCampaigns() {
+    const campaigns = await (this.prisma as any).campaign.findMany({
+      where: { status: 'RUNNING' },
+    });
+
+    for (const campaign of campaigns) {
+      await this.startCampaignExecution(campaign.id);
+    }
+  }
 }

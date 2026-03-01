@@ -10,7 +10,12 @@ import { initSentry } from './sentry';
 
 async function bootstrap() {
   try {
-    dotenv.config({ path: path.join(process.cwd(), fs.existsSync(path.join(process.cwd(), '.env')) ? '.env' : '../../.env') });
+    dotenv.config({
+      path: path.join(
+        process.cwd(),
+        fs.existsSync(path.join(process.cwd(), '.env')) ? '.env' : '../../.env',
+      ),
+    });
     validateEnv();
 
     // Initialize Sentry
@@ -24,10 +29,7 @@ async function bootstrap() {
     // Security
     app.use(helmet());
     app.enableCors({
-      origin: [
-        'http://localhost:3000',
-        'https://ori-os.ori-craftlabs.com',
-      ],
+      origin: ['http://localhost:3000', 'https://ori-os.ori-craftlabs.com'],
       credentials: true,
     });
 

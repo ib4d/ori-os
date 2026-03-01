@@ -178,7 +178,7 @@ export default function CampaignDetailPage({ params }: { params: Promise<{ id: s
                                 {idx < campaign.steps.length - 1 && (
                                     <div className="absolute left-6 top-12 bottom-0 w-px bg-border" />
                                 )}
-                                <div className={`w-12 h-12 rounded-full flex items-center justify-center shrink-0 z-10 ${step.type === 'Email' ? 'bg-primary/10 text-primary' : 'bg-muted text-muted-foreground'
+                                <div className={`w-12 h-12 rounded-none flex items-center justify-center shrink-0 z-10 ${step.type === 'Email' ? 'bg-primary/10 text-primary' : 'bg-muted text-muted-foreground'
                                     }`}>
                                     {step.type === 'Email' ? <Mail className="h-6 w-6" /> : <Clock className="h-6 w-6" />}
                                 </div>

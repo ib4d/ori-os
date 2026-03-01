@@ -102,9 +102,9 @@ export default function SecuritySettingsPage() {
                         </div>
                     </CardHeader>
                     <CardContent>
-                        <div className="flex items-center justify-between p-4 rounded-sm border border-border bg-muted/10">
+                        <div className="flex items-center justify-between p-4 rounded-none border border-border bg-muted/10">
                             <div className="flex gap-4">
-                                <div className="p-2 h-fit rounded-full bg-blue-500/10">
+                                <div className="p-2 h-fit rounded-none bg-blue-500/10">
                                     <Shield className="w-5 h-5 text-blue-500" />
                                 </div>
                                 <div>
@@ -130,7 +130,7 @@ export default function SecuritySettingsPage() {
                     <CardContent className="space-y-4">
                         <div className="flex items-center justify-between py-2">
                             <div className="flex gap-4">
-                                <div className="p-2 h-fit rounded-sm bg-muted">
+                                <div className="p-2 h-fit rounded-none bg-muted">
                                     <p className="text-xs font-bold text-muted-foreground uppercase">Web</p>
                                 </div>
                                 <div>
@@ -143,7 +143,7 @@ export default function SecuritySettingsPage() {
                         <Separator />
                         <div className="flex items-center justify-between py-2 opacity-60">
                             <div className="flex gap-4">
-                                <div className="p-2 h-fit rounded-sm bg-muted">
+                                <div className="p-2 h-fit rounded-none bg-muted">
                                     <p className="text-xs font-bold text-muted-foreground uppercase">Mob</p>
                                 </div>
                                 <div>
@@ -156,7 +156,7 @@ export default function SecuritySettingsPage() {
                     </CardContent>
                 </Card>
 
-                <div className="p-6 border border-destructive/20 bg-destructive/5 rounded-sm">
+                <div className="p-6 border border-destructive/20 bg-destructive/5 rounded-none">
                     <div className="flex items-start gap-4">
                         <AlertTriangle className="w-6 h-6 text-destructive mt-0.5" />
                         <div className="flex-1">

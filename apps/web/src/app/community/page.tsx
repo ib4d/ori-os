@@ -32,7 +32,7 @@ export default function CommunityPage() {
                             ].map((social, i) => (
                                 <Card key={i} hover="lift" className="cursor-pointer border-none shadow-sm">
                                     <CardContent className="p-8 text-center">
-                                        <div className={`p-4 rounded-sm ${social.color} text-white w-fit mx-auto mb-6`}>
+                                        <div className={`p-4 rounded-none ${social.color} text-white w-fit mx-auto mb-6`}>
                                             <social.icon className="h-8 w-8" />
                                         </div>
                                         <h3 className="text-xl font-bold mb-2">{social.name}</h3>
@@ -62,7 +62,7 @@ export default function CommunityPage() {
                                 </div>
                                 <Button variant="accent" size="lg">Join the Discord</Button>
                             </div>
-                            <div className="bg-muted/30 aspect-video rounded-sm flex items-center justify-center p-12">
+                            <div className="bg-muted/30 aspect-video rounded-none flex items-center justify-center p-12">
                                 <Users className="h-32 w-32 text-muted-foreground/20" />
                             </div>
                         </div>

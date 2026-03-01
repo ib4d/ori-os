@@ -1,0 +1,83 @@
+
+> ori-os@0.1.0 build
+> turbo run build
+
+npm : ??? turbo 2.8.3
+At line:1 char:170
++ ... urse -Force -ErrorAction SilentlyContinue; npm run build *>&1 | Out-F ...
++                                                ~~~~~~~~~~~~~~~~~~
+    + CategoryInfo              : NotS    pecified: (???     turbo 2.8.3:Str    ing) [], Remote    Exception
+    + FullyQualifie    dErrorId : Nati    veCommandError
+ 
+??? Packages in scope: @ori-os/api, @ori-os/core, @ori-os/db, @ori-os/ui, @ori-os/web, @ori-os/worker
+??? Running build in 6 packages
+??? Remote caching disabled
+@ori-os/web:build: cache miss, executing 0c6601e4ff01cc74
+@ori-os/core:build: cache hit, replaying logs ff5e64827b936be7
+@ori-os/db:build: cache hit, replaying logs fd847ce38b03adad
+@ori-os/core:build: 
+@ori-os/core:build: > @ori-os/core@0.1.0 build
+@ori-os/core:build: > tsc
+@ori-os/core:build: 
+@ori-os/db:build: 
+@ori-os/db:build: > @ori-os/db@0.1.0 build
+@ori-os/db:build: > tsc
+@ori-os/db:build: 
+@ori-os/worker:build: cache hit, replaying logs 2b8e39db3dbb203b
+@ori-os/worker:build: 
+@ori-os/worker:build: > @ori-os/worker@0.1.0 build
+@ori-os/worker:build: > tsc
+@ori-os/worker:build: 
+@ori-os/api:build: cache hit, replaying logs 3eca0037c9a72758
+@ori-os/api:build: 
+@ori-os/api:build: > @ori-os/api@0.1.0 build
+@ori-os/api:build: > nest build
+@ori-os/api:build: 
+@ori-os/web:build: 
+@ori-os/web:build: > @ori-os/web@0.1.0 build
+@ori-os/web:build: > next build
+@ori-os/web:build: 
+@ori-os/web:build:    ??? Next.js 15.5.12
+@ori-os/web:build:    - Environments: .env.local
+@ori-os/web:build:    - Experiments (use with caution):
+@ori-os/web:build:      ?? clientTraceMetadata
+@ori-os/web:build: 
+@ori-os/web:build:    Creating an optimized production build ...
+@ori-os/web:build: [@sentry/nextjs] It appears you've configured a `sentry.server.config.ts` file. Please ensure to put this file's content into the `register()` function of a Next.js instrumentation file instead. To ensure correct functionality of the SDK, `Sentry.init` must be called inside of an instrumentation file. Learn more about setting up an instrumentation file in Next.js: https://nextjs.org/docs/app/building-your-application/optimizing/instrumentation. You can safely delete the `sentry.server.config.ts` file afterward.
+@ori-os/web:build: [@sentry/nextjs] Could not find a Next.js instrumentation file. This indicates an incomplete configuration of the Sentry SDK. An instrumentation file is required for the Sentry SDK to be initialized on the server: https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/#create-initialization-config-files (you can suppress this warning by setting SENTRY_SUPPRESS_INSTRUMENTATION_FILE_WARNING=1 as environment variable)
+@ori-os/web:build: [@sentry/nextjs] It seems like you don't have a global error handler set up. It is recommended that you add a 'global-error.js' file with Sentry instrumentation so that React rendering errors are reported to Sentry. Read more: https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/#react-render-errors-in-app-router (you can suppress this warning by setting SENTRY_SUPPRESS_GLOBAL_ERROR_HANDLER_FILE_WARNING=1 as environment variable)
+@ori-os/web:build: [@sentry/nextjs] It appears you've configured a `sentry.edge.config.ts` file. Please ensure to put this file's content into the `register()` function of a Next.js instrumentation file instead. To ensure correct functionality of the SDK, `Sentry.init` must be called inside of an instrumentation file. Learn more about setting up an instrumentation file in Next.js: https://nextjs.org/docs/app/building-your-application/optimizing/instrumentation. You can safely delete the `sentry.edge.config.ts` file afterward.
+@ori-os/web:build: [@sentry/nextjs] DEPRECATION WARNING: It is recommended renaming your `sentry.client.config.ts` file, or moving its content to `instrumentation-client.ts`. When using Turbopack `sentry.client.config.ts` will no longer work. Read more about the `instrumentation-client.ts` file: https://nextjs.org/docs/app/api-reference/file-conventions/instrumentation-client
+@ori-os/web:build: <w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (189kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)
+@ori-os/web:build: <w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (139kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)
+@ori-os/web:build:  ??? Compiled successfully in 38.7s
+@ori-os/web:build:    Linting and checking validity of types ...
+@ori-os/web:build: Failed to compile.
+@ori-os/web:build: 
+@ori-os/web:build: ./src/app/(dashboard)/dashboard/workflows/page.tsx:35:81
+@ori-os/web:build: Type error: This comparison appears to be unintentional because the types 'WorkflowStatus' and '"Active"' have no overlap.
+@ori-os/web:build: 
+@ori-os/web:build: [0m [90m 33 |[39m             [33m<[39m[33mdiv[39m className[33m=[39m[32m"grid grid-cols-1 sm:grid-cols-3 gap-4"[39m[33m>[39m
+@ori-os/web:build:  [90m 34 |[39m                 {[
+@ori-os/web:build: [31m[1m>[22m[39m[90m 35 |[39m                     { label[33m:[39m [32m'Active Automations'[39m[33m,[39m value[33m:[39m workflows[33m.[39mfilter(w [33m=>[39m w[33m.[39mstatus [33m===[39m [32m'Active'[39m)[33m.[39mlength[33m,[39m icon[33m:[39m [33mZap[39m[33m,[39m color[33m:[39m [32m'text-tangerine'[39m }[33m,[39m
+@ori-os/web:build:  [90m    |[39m                                                                                 [31m[1m^[22m[39m
+@ori-os/web:build:  [90m 36 |[39m                     { label[33m:[39m [32m'Runs this month'[39m[33m,[39m value[33m:[39m [32m'1,284'[39m[33m,[39m icon[33m:[39m [33mPlay[39m[33m,[39m color[33m:[39m [32m'text-blue-500'[39m }[33m,[39m
+@ori-os/web:build:  [90m 37 |[39m                     { label[33m:[39m [32m'Time Saved'[39m[33m,[39m value[33m:[39m [32m'42h'[39m[33m,[39m icon[33m:[39m [33mClock[39m[33m,[39m color[33m:[39m [32m'text-green-500'[39m }[33m,[39m
+@ori-os/web:build:  [90m 38 |[39m                 ][33m.[39mmap((stat) [33m=>[39m ([0m
+@ori-os/web:build: Next.js build worker exited with code: 1 and signal: null
+@ori-os/web:build: npm error Lifecycle script `build` failed with error:
+@ori-os/web:build: npm error code 1
+@ori-os/web:build: npm error path C:\dev\ORI-OS2.0\apps\web
+@ori-os/web:build: npm error workspace @ori-os/web@0.1.0
+@ori-os/web:build: npm error location C:\dev\ORI-OS2.0\apps\web
+@ori-os/web:build: npm error command failed
+@ori-os/web:build: npm error command C:\WINDOWS\system32\cmd.exe /d /s /c next build
+@ori-os/web:build: ERROR: command finished with error: command (C:\dev\ORI-OS2.0\apps\web) C:\Program Files\nodejs\npm.cmd run build exited (1)
+@ori-os/web#build: command (C:\dev\ORI-OS2.0\apps\web) C:\Program Files\nodejs\npm.cmd run build exited (1)
+
+ Tasks:    4 successful, 5 total
+Cached:    4 cached, 5 total
+  Time:    53.603s 
+Failed:    @ori-os/web#build
+
+ ERROR  run failed: command  exited (1)

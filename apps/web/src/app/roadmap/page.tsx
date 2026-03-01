@@ -89,7 +89,7 @@ export default function RoadmapPage() {
                             ))}
                         </div>
 
-                        <div className="mt-20 p-8 rounded-sm bg-gunmetal text-white text-center">
+                        <div className="mt-20 p-8 rounded-none bg-gunmetal text-white text-center">
                             <h3 className="text-xl font-bold mb-4">Have a feature request?</h3>
                             <p className="text-white/70 mb-6">We build Ori-OS with our community. Tell us what you need next.</p>
                             <Button variant="accent">Submit Feedback</Button>

@@ -50,7 +50,7 @@ export function MarketingHeader() {
                 <div className="flex h-16 items-center justify-between">
                     {/* Logo */}
                     <Link href="/" className="flex items-center gap-2">
-                        <div className="h-8 w-8 rounded-sm bg-gradient-to-br from-tangerine to-tangerine/80 flex items-center justify-center">
+                        <div className="h-8 w-8 rounded-none bg-gradient-to-br from-tangerine to-tangerine/80 flex items-center justify-center">
                             <span className="text-white font-bold text-lg">O</span>
                         </div>
                         <span className="font-semibold text-xl text-foreground">
@@ -71,7 +71,7 @@ export function MarketingHeader() {
                                     href={item.href}
                                     className={cn(
                                         'flex items-center gap-1 px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors',
-                                        'rounded-sm hover:bg-muted/50'
+                                        'rounded-none hover:bg-muted/50'
                                     )}
                                 >
                                     {item.label}
@@ -86,13 +86,13 @@ export function MarketingHeader() {
                                         initial={{ opacity: 0, y: 10 }}
                                         animate={{ opacity: 1, y: 0 }}
                                         exit={{ opacity: 0, y: 10 }}
-                                        className="absolute top-full left-0 mt-2 w-72 p-2 rounded-sm bg-popover border border-border shadow-glass-lg"
+                                        className="absolute top-full left-0 mt-2 w-72 p-2 rounded-none bg-popover border border-border shadow-glass-lg"
                                     >
                                         {item.children.map((child) => (
                                             <Link
                                                 key={child.label}
                                                 href={child.href}
-                                                className="block p-3 rounded-sm hover:bg-muted transition-colors group"
+                                                className="block p-3 rounded-none hover:bg-muted transition-colors group"
                                             >
                                                 <div className="font-medium text-foreground group-hover:text-tangerine transition-colors">
                                                     {child.label}

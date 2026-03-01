@@ -21,9 +21,9 @@ export default function HelpPage() {
 
             <div className="grid md:grid-cols-2 gap-6">
                 {[
-                    { icon: Book, title: 'Documentation', description: 'Comprehensive guides and API references', href: 'https://docs.ori-os.com' },
-                    { icon: Video, title: 'Video Tutorials', description: 'Step-by-step video walkthroughs', href: 'https://youtube.com/@ori-os' },
-                    { icon: MessageCircle, title: 'Community Forum', description: 'Connect with other users and get answers', href: 'https://community.ori-os.com' },
+                    { icon: Book, title: 'Documentation', description: 'Comprehensive guides and API references', href: '/dashboard/help/docs' },
+                    { icon: Video, title: 'Video Tutorials', description: 'Step-by-step video walkthroughs', href: '/dashboard/help/tutorials' },
+                    { icon: MessageCircle, title: 'Community Forum', description: 'Connect with other users and get answers', href: '/dashboard/help/community' },
                     { icon: FileText, title: 'Knowledge Base', description: 'Search our library of helpful articles', href: '/dashboard/help/kb' },
                 ].map((item, i) => (
                     <motion.a

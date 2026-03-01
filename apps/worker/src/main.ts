@@ -1,9 +1,18 @@
+﻿import * as dotenv from 'dotenv';
+import * as path from 'path';
+
+dotenv.config({ path: path.resolve(__dirname, '..', '.env') });
+
+import 'reflect-metadata';
 import { NestFactory } from '@nestjs/core';
-import { WorkerModule } from './worker.module';
+import { AppModule } from './app.module';
 
 async function bootstrap() {
-    const app = await NestFactory.create(WorkerModule);
-    await app.listen(3002); // Worker runs on a different port or just processes jobs
-    console.log('Worker is running');
+  const app = await NestFactory.createApplicationContext(AppModule);
+  console.log('Worker is running...');
 }
-bootstrap();
+
+bootstrap().catch((err) => {
+  console.error('Worker failed to start:', err);
+  process.exit(1);
+});

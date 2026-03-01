@@ -125,7 +125,7 @@ export default function PrivacySettingsPage() {
                         <CardDescription>Download a copy of your data for your own records</CardDescription>
                     </CardHeader>
                     <CardContent>
-                        <div className="p-6 rounded-sm border border-border bg-muted/5 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                        <div className="p-6 rounded-none border border-border bg-muted/5 flex flex-col md:flex-row md:items-center justify-between gap-4">
                             <div>
                                 <h4 className="font-semibold mb-1 text-sm">Download your information</h4>
                                 <p className="text-xs text-muted-foreground">Get a JSON container of your contacts, companies, and campaign history.</p>

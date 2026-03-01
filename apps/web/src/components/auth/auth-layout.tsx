@@ -18,13 +18,13 @@ export function AuthLayout({ children }: { children: React.ReactNode }) {
                 </div>
 
                 {/* Decorative blobs */}
-                <div className="absolute top-1/4 -left-20 w-72 h-72 bg-tangerine/30 rounded-full blur-3xl" />
-                <div className="absolute bottom-1/4 -right-20 w-96 h-96 bg-tangerine/20 rounded-full blur-3xl" />
+                <div className="absolute top-1/4 -left-20 w-72 h-72 bg-tangerine/30 rounded-none blur-3xl" />
+                <div className="absolute bottom-1/4 -right-20 w-96 h-96 bg-tangerine/20 rounded-none blur-3xl" />
 
                 <div className="relative flex flex-col justify-between p-12 w-full">
                     {/* Logo */}
                     <Link href="/" className="flex items-center gap-2">
-                        <div className="h-10 w-10 rounded-sm bg-gradient-to-br from-tangerine to-tangerine/80 flex items-center justify-center">
+                        <div className="h-10 w-10 rounded-none bg-gradient-to-br from-tangerine to-tangerine/80 flex items-center justify-center">
                             <span className="text-white font-bold text-xl">O</span>
                         </div>
                         <span className="font-semibold text-2xl text-white">Ori-OS</span>
@@ -45,21 +45,21 @@ export function AuthLayout({ children }: { children: React.ReactNode }) {
                                 <Sparkles className="h-4 w-4 text-tangerine" />
                                 <span>AI-Powered</span>
                             </div>
-                            <div className="w-1 h-1 rounded-full bg-white/40" />
+                            <div className="w-1 h-1 rounded-none bg-white/40" />
                             <span>14-day free trial</span>
-                            <div className="w-1 h-1 rounded-full bg-white/40" />
+                            <div className="w-1 h-1 rounded-none bg-white/40" />
                             <span>No credit card</span>
                         </div>
                     </div>
 
                     {/* Testimonial */}
-                    <div className="bg-white/10 backdrop-blur-sm rounded-sm p-6 max-w-md">
+                    <div className="bg-white/10 backdrop-blur-sm rounded-none p-6 max-w-md">
                         <p className="text-white/90 mb-4">
                             "Ori-OS replaced 5 different tools. The unified platform has saved
                             us countless hours."
                         </p>
                         <div className="flex items-center gap-3">
-                            <div className="h-10 w-10 rounded-full bg-tangerine/20 flex items-center justify-center text-tangerine font-medium">
+                            <div className="h-10 w-10 rounded-none bg-tangerine/20 flex items-center justify-center text-tangerine font-medium">
                                 SC
                             </div>
                             <div>

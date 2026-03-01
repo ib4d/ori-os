@@ -126,8 +126,8 @@ export default function NotificationsSettingsPage() {
                         <CardDescription>Send notifications to your connected Slack workspace</CardDescription>
                     </CardHeader>
                     <CardContent>
-                        <div className="p-8 border border-dashed border-border rounded-sm bg-muted/20 flex flex-col items-center justify-center text-center">
-                            <div className="p-3 rounded-full bg-green-500/10 mb-4">
+                        <div className="p-8 border border-dashed border-border rounded-none bg-muted/20 flex flex-col items-center justify-center text-center">
+                            <div className="p-3 rounded-none bg-green-500/10 mb-4">
                                 <MessageSquare className="w-8 h-8 text-green-500" />
                             </div>
                             <h4 className="font-semibold mb-2">Connect to Slack</h4>

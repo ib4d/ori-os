@@ -1,0 +1,45 @@
+
+> @ori-os/web@0.1.0 build
+> next build
+
+   ??? Next.js 15.5.12
+   - Environments: .env.local
+   - Experiments (use with caution):
+     ?? clientTraceMetadata
+
+   Creating an optimized production build ...
+npm : [@sentry/nextjs] It appears you've configured a `sentry.server.config.ts` file. Please ensure to put this file's content into the `register()` function of a Next.js instrumentation file instead. To ensure correct functionality of the SDK, `Sentry.init` must be called inside of an instrumentation file. Learn more about setting up an instrumentation file in Next.js: https://nextjs.org/docs/app/building-your-application/optimizing/instrumentation. You can safely delete the 
+`sentry.server.config.ts` file afterward.
+At line:1 char:1
++ npm run build --workspace=@ori-os/web *>&1 | Out-File -FilePath "web- ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo              : NotS    pecified: ([@se    ntry/nextjs...f    ile afterward.:    String) [], Rem    oteException
+    + FullyQualifie    dErrorId : Nati    veCommandError
+ 
+[@sentry/nextjs] Could not find a Next.js instrumentation file. This indicates an incomplete configuration of the Sentry SDK. An instrumentation file is required for the Sentry SDK to be initialized on the server: https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/#create-initialization-config-files (you can suppress this warning by setting SENTRY_SUPPRESS_INSTRUMENTATION_FILE_WARNING=1 as environment variable)
+[@sentry/nextjs] It seems like you don't have a global error handler set up. It is recommended that you add a 'global-error.js' file with Sentry instrumentation so that React rendering errors are reported to Sentry. Read more: https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/#react-render-errors-in-app-router (you can suppress this warning by setting SENTRY_SUPPRESS_GLOBAL_ERROR_HANDLER_FILE_WARNING=1 as environment variable)
+[@sentry/nextjs] It appears you've configured a `sentry.edge.config.ts` file. Please ensure to put this file's content into the `register()` function of a Next.js instrumentation file instead. To ensure correct functionality of the SDK, `Sentry.init` must be called inside of an instrumentation file. Learn more about setting up an instrumentation file in Next.js: https://nextjs.org/docs/app/building-your-application/optimizing/instrumentation. You can safely delete the `sentry.edge.config.ts` 
+file afterward.
+[@sentry/nextjs] DEPRECATION WARNING: It is recommended renaming your `sentry.client.config.ts` file, or moving its content to `instrumentation-client.ts`. When using Turbopack `sentry.client.config.ts` will no longer work. Read more about the `instrumentation-client.ts` file: https://nextjs.org/docs/app/api-reference/file-conventions/instrumentation-client
+ ??? Compiled successfully in 14.6s
+   Linting and checking validity of types ...
+Failed to compile.
+
+./src/app/(dashboard)/dashboard/workflows/page.tsx:35:81
+Type error: This comparison appears to be unintentional because the types 'WorkflowStatus' and '"Active"' have no overlap.
+
+[0m [90m 33 |[39m             [33m<[39m[33mdiv[39m className[33m=[39m[32m"grid grid-cols-1 sm:grid-cols-3 gap-4"[39m[33m>[39m
+ [90m 34 |[39m                 {[
+[31m[1m>[22m[39m[90m 35 |[39m                     { label[33m:[39m [32m'Active Automations'[39m[33m,[39m value[33m:[39m workflows[33m.[39mfilter(w [33m=>[39m w[33m.[39mstatus [33m===[39m [32m'Active'[39m)[33m.[39mlength[33m,[39m icon[33m:[39m [33mZap[39m[33m,[39m color[33m:[39m [32m'text-tangerine'[39m }[33m,[39m
+ [90m    |[39m                                                                                 [31m[1m^[22m[39m
+ [90m 36 |[39m                     { label[33m:[39m [32m'Runs this month'[39m[33m,[39m value[33m:[39m [32m'1,284'[39m[33m,[39m icon[33m:[39m [33mPlay[39m[33m,[39m color[33m:[39m [32m'text-blue-500'[39m }[33m,[39m
+ [90m 37 |[39m                     { label[33m:[39m [32m'Time Saved'[39m[33m,[39m value[33m:[39m [32m'42h'[39m[33m,[39m icon[33m:[39m [33mClock[39m[33m,[39m color[33m:[39m [32m'text-green-500'[39m }[33m,[39m
+ [90m 38 |[39m                 ][33m.[39mmap((stat) [33m=>[39m ([0m
+Next.js build worker exited with code: 1 and signal: null
+npm error Lifecycle script `build` failed with error:
+npm error code 1
+npm error path C:\dev\ORI-OS2.0\apps\web
+npm error workspace @ori-os/web@0.1.0
+npm error location C:\dev\ORI-OS2.0\apps\web
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c next build

@@ -38,7 +38,7 @@ services:
     image: getmeili/meilisearch:v1.6
     container_name: ori-os-meilisearch
     environment:
-      MEILI_MASTER_KEY: ${MEILISEARCH_KEY}
+      MEILI_MASTER_KEY: ${MEILI_MASTER_KEY}
       MEILI_ENV: production
     volumes:
       - meilisearch_data:/meili_data
@@ -56,8 +56,8 @@ services:
     container_name: ori-os-minio
     command: server /data --console-address ":9001"
     environment:
-      MINIO_ROOT_USER: ${S3_ACCESS_KEY}
-      MINIO_ROOT_PASSWORD: ${S3_SECRET_KEY}
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
     volumes:
       - minio_data:/data
     restart: unless-stopped
@@ -73,13 +73,12 @@ services:
   api:
     build:
       context: .
-      dockerfile: apps/api/Dockerfile
+      dockerfile: Dockerfile.api
     container_name: ori-os-api
     restart: always
-    # Expose to internal Docker network only (for Nginx Proxy Manager to reach)
     expose:
       - "4000"
-    env_file: .env.production
+    env_file: .env.prod
     environment:
       - NODE_ENV=production
       - API_PORT=4000
@@ -98,10 +97,10 @@ services:
   worker:
     build:
       context: .
-      dockerfile: apps/worker/Dockerfile
+      dockerfile: Dockerfile.worker
     container_name: ori-os-worker
     restart: always
-    env_file: .env.production
+    env_file: .env.prod
     environment:
       - NODE_ENV=production
     depends_on:
@@ -115,13 +114,12 @@ services:
   web:
     build:
       context: .
-      dockerfile: apps/web/Dockerfile
+      dockerfile: Dockerfile.web
     container_name: ori-os-web
     restart: always
-    # Expose to internal Docker network only
     expose:
       - "3000"
-    env_file: .env.production
+    env_file: .env.prod
     environment:
       - NODE_ENV=production
       - PORT=3000
@@ -131,13 +129,31 @@ services:
     networks:
       - ori_network
 
+  caddy:
+    image: caddy:2-alpine
+    container_name: ori-os-caddy
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - web
+      - api
+    networks:
+      - ori_network
+
 networks:
   ori_network:
-    external: true
-    name: ori_network
+    driver: bridge
 
 volumes:
   postgres_data:
   redis_data:
   meilisearch_data:
   minio_data:
+  caddy_data:
+  caddy_config:

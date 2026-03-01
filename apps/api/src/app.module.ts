@@ -16,8 +16,8 @@ import { AppService } from './app.service';
 import { ContactsController } from './contacts.controller';
 import { CompaniesController } from './companies.controller';
 import { AnalyticsModule } from './analytics/analytics.module';
-import { IntelligenceController } from './intelligence.controller';
-import { IntelligenceService } from './intelligence.service';
+import { IntelligenceModule } from './intelligence/intelligence.module';
+import { AutomationModule } from './automation/automation.module';
 import { DealsController } from './deals.controller';
 import { NotificationsModule } from './notifications.module';
 import { AiService } from './ai.service';
@@ -25,12 +25,15 @@ import { EmailService } from './email.service';
 import { CampaignsController } from './engagement.controller';
 import { InboxController } from './engagement.controller';
 import { EngagementService } from './engagement.service';
+import { CampaignLaunchService } from './engagement/campaign-launch.service';
 import { TemplatesController } from './templates.controller';
-import { AutomationsController } from './automations.controller';
 import { ActivitiesController } from './activities.controller';
 import { TestBenchController } from './test-bench.controller';
 import { UnsubscribeController } from './unsubscribe.controller';
 import { SeoModule } from './seo/seo.module';
+import { BacklinksController } from './backlinks.controller';
+import { NotificationsController } from './notifications.controller';
+import { DashboardController } from './dashboard.controller';
 
 @Module({
   imports: [
@@ -47,43 +50,54 @@ import { SeoModule } from './seo/seo.module';
       },
     }),
     SeoModule,
+    IntelligenceModule,
+    AutomationModule,
     NotificationsModule,
-    ThrottlerModule.forRoot([{
-      ttl: 60000, // 60 seconds
-      limit: 100, // 100 requests per minute
-    }]),
+    ThrottlerModule.forRoot([
+      {
+        ttl: 60000, // 60 seconds
+        limit: 100, // 100 requests per minute
+      },
+    ]),
     CommonModule,
     ConnectorsModule,
     MediaModule,
     AIModule,
+    BullModule.registerQueue(
+      { name: 'campaign-queue' },
+      { name: 'email-queue' },
+      { name: 'email-send' },
+      { name: 'workflow-run' },
+      { name: 'seo-queue' },
+      { name: 'intelligence-job' },
+    ),
   ],
   controllers: [
     AppController,
     ContactsController,
     CompaniesController,
-    IntelligenceController,
     DealsController,
     CampaignsController,
     InboxController,
     TemplatesController,
-    AutomationsController,
     ActivitiesController,
     TestBenchController,
     UnsubscribeController,
+    BacklinksController,
+    NotificationsController,
+    DashboardController,
   ],
   providers: [
     AppService,
-    IntelligenceService,
     AiService,
     EmailService,
     EngagementService,
-    UsageLimitMiddleware
+    CampaignLaunchService,
+    UsageLimitMiddleware,
   ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(UsageLimitMiddleware)
-      .forRoutes('engagement/campaigns');
+    consumer.apply(UsageLimitMiddleware).forRoutes('engagement/campaigns');
   }
 }

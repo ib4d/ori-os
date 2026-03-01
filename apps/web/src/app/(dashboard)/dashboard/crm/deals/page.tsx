@@ -24,7 +24,7 @@ import { DealDetailsModal } from '../../../../../components/crm/deal-details-mod
 import { exportToCSV } from '@/lib/export';
 
 export default function DealsPage() {
-    const { deals, isLoading, refresh } = useDeals(); // useDeals updated with refresh earlier
+    const { deals, isLoading, error, refresh } = useDeals(); // useDeals updated with refresh earlier
     const [searchQuery, setSearchQuery] = useState('');
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
     const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
@@ -134,7 +134,7 @@ export default function DealsPage() {
                             <CardContent className="p-4">
                                 <div className="flex items-center justify-between mb-2">
                                     <span className="text-sm font-medium text-foreground">{stage.name}</span>
-                                    <div className={`w-2 h-2 rounded-full ${stage.color}`} />
+                                    <div className={`w-2 h-2 rounded-none ${stage.color}`} />
                                 </div>
                                 <div className="text-2xl font-bold text-foreground">{stage.count}</div>
                                 <div className="text-sm text-muted-foreground">{stage.value}</div>
@@ -192,7 +192,7 @@ export default function DealsPage() {
                                 initial={{ opacity: 0, x: -20 }}
                                 animate={{ opacity: 1, x: 0 }}
                                 transition={{ duration: 0.3, delay: index * 0.1 }}
-                                className="p-4 hover:bg-muted/50 transition-colors"
+                                className="p-4 hover:bg-muted/50 transition-colors group"
                             >
                                 <div className="flex items-center justify-between">
                                     <div className="flex-1">
@@ -201,12 +201,12 @@ export default function DealsPage() {
                                             <Badge variant="outline">{deal.stage}</Badge>
                                         </div>
                                         <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                                            <span className="flex items-center gap-1"><Building2 className="h-3 w-3" />{deal.company}</span>
-                                            <span className="flex items-center gap-1">
-                                                <DollarSign className="h-3 w-3" />
+                                            <span className="flex items-center gap-1 group/item"><Building2 className="h-3 w-3 text-tangerine/60 group-hover/item:text-tangerine transition-colors" />{deal.company}</span>
+                                            <span className="flex items-center gap-1 group/item">
+                                                <DollarSign className="h-3 w-3 text-tangerine/60 group-hover/item:text-tangerine transition-colors" />
                                                 {typeof deal.value === 'number' ? `$${deal.value.toLocaleString()}` : deal.value}
                                             </span>
-                                            <span className="flex items-center gap-1"><Calendar className="h-3 w-3" />{deal.expectedClose}</span>
+                                            <span className="flex items-center gap-1 group/item"><Calendar className="h-3 w-3 text-tangerine/60 group-hover/item:text-tangerine transition-colors" />{deal.expectedClose}</span>
                                         </div>
                                         <div className="mt-3 flex items-center gap-3">
                                             <Progress value={deal.probability} className="flex-1 h-2" />

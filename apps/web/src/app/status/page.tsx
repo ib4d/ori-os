@@ -25,9 +25,9 @@ export default function StatusPage() {
             <main className="flex-1 bg-background pt-24">
                 <div className="container mx-auto px-4 py-24">
                     <div className="max-w-4xl mx-auto">
-                        <div className="p-6 rounded-sm bg-success/10 border border-success/20 flex items-center justify-between mb-12">
+                        <div className="p-6 rounded-none bg-success/10 border border-success/20 flex items-center justify-between mb-12">
                             <div className="flex items-center gap-4">
-                                <div className="h-4 w-4 rounded-full bg-success animate-pulse" />
+                                <div className="h-4 w-4 rounded-none bg-success animate-pulse" />
                                 <h1 className="text-xl font-bold text-success">All Systems Operational</h1>
                             </div>
                             <span className="text-sm text-success/70 font-medium">As of Feb 1, 2026 - 15:42 UTC</span>
@@ -56,7 +56,7 @@ export default function StatusPage() {
                             <h2 className="text-2xl font-bold mb-6">Incident History</h2>
                             <div className="space-y-4">
                                 {incidents.map((inc, i) => (
-                                    <div key={i} className="p-6 rounded-sm border border-border flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                    <div key={i} className="p-6 rounded-none border border-border flex flex-col md:flex-row md:items-center justify-between gap-4">
                                         <div>
                                             <div className="text-xs text-muted-foreground font-medium mb-1 uppercase tracking-wider">{inc.date}</div>
                                             <h3 className="font-bold text-lg">{inc.title}</h3>

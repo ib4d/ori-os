@@ -1,29 +1,29 @@
 import { IsNotEmpty, IsOptional, IsUrl } from 'class-validator';
 
 export class CreateCompetitorDto {
-    @IsNotEmpty()
-    projectId: string;
+  @IsNotEmpty()
+  projectId: string;
 
-    @IsNotEmpty()
-    name: string;
+  @IsNotEmpty()
+  name: string;
 
-    @IsUrl()
-    @IsNotEmpty()
-    domain: string;
+  @IsUrl()
+  @IsNotEmpty()
+  domain: string;
 
-    @IsOptional()
-    description?: string;
+  @IsOptional()
+  description?: string;
 }
 
 export class GetCompetitorsDto {
-    @IsOptional()
-    limit?: number;
+  @IsOptional()
+  limit?: number;
 
-    @IsOptional()
-    offset?: number;
+  @IsOptional()
+  offset?: number;
 }
 
 export class CheckCompetitorDto {
-    @IsNotEmpty()
-    competitorId: string;
+  @IsNotEmpty()
+  competitorId: string;
 }

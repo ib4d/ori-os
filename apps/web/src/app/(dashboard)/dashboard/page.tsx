@@ -25,82 +25,25 @@ import {
     Clock,
     Beaker,
 } from 'lucide-react';
-import { useCompanies } from '@/hooks/use-companies';
-import { useContacts } from '@/hooks/use-contacts';
-import { useDeals } from '@/hooks/use-deals';
-import { useActivity } from '@/hooks/use-activity';
+import { useDashboard } from '@/hooks/use-dashboard';
 import { useMemo } from 'react';
 import Link from 'next/link';
+import { DashboardStats } from '@/components/dashboard-stats';
 
 export default function DashboardPage() {
-    const { companies } = useCompanies();
-    const { contacts } = useContacts();
-    const { deals } = useDeals();
-    const { activities } = useActivity();
+    const { data: dashboardData, isLoading, error } = useDashboard();
+    const activities = dashboardData?.recentActivity || [];
 
-    const stats = useMemo(() => {
-        const totalValue = deals.reduce((sum, d) => sum + (typeof d.value === 'number' ? d.value : 0), 0);
-        return [
-            { title: 'Total Contacts', value: contacts.length.toLocaleString(), change: '+12.5%', trend: 'up', icon: Users },
-            { title: 'Companies', value: companies.length.toLocaleString(), change: '+8.2%', trend: 'up', icon: Building2 },
-            { title: 'Active Deals', value: `$${(totalValue / 1000).toFixed(1)}k`, change: '+23.1%', trend: 'up', icon: DollarSign },
-            { title: 'Emails Sent', value: ((contacts.length * 14) + 128).toLocaleString(), change: '+4.5%', trend: 'up', icon: Mail },
-        ];
-    }, [companies, contacts, deals]);
-
-    const topDeals = useMemo(() => {
-        return [...deals]
-            .sort((a, b) => (typeof b.value === 'number' ? b.value : 0) - (typeof a.value === 'number' ? a.value : 0))
-            .slice(0, 3);
-    }, [deals]);
-
-    return (
-        <div className="space-y-6">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                <div>
-                    <h1 className="text-2xl font-bold text-foreground">Dashboard</h1>
-                    <p className="text-muted-foreground">Welcome back! Here's what's happening with your business.</p>
-                </div>
-                <div className="flex items-center gap-3">
-                    <Button variant="outline" asChild className="hidden sm:flex border-yellow-500/50 text-yellow-600 hover:bg-yellow-500/10">
-                        <Link href="/dashboard/test-bench">
-                            <Beaker className="mr-2 h-4 w-4" />
-                            Test Bench
-                        </Link>
-                    </Button>
-                    <Button variant="outline" asChild><Link href="/dashboard/analytics"><BarChart3 className="mr-2 h-4 w-4" />Reports</Link></Button>
-                    <Button variant="accent" asChild><Link href="/dashboard/intelligence"><Sparkles className="mr-2 h-4 w-4" />Quick Enrich</Link></Button>
-                </div>
+    if (error) {
+        return (
+            <div className="p-6 bg-destructive/10 text-destructive text-sm rounded-none border border-destructive/20 flex flex-col items-center gap-4">
+                <p>Failed to load dashboard: {error}</p>
+                <Button variant="outline" size="sm" onClick={() => window.location.reload()}>Retry</Button>
             </div>
+        );
+    }
 
-            {/* Stats grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                {stats.map((stat, index) => (
-                    <motion.div
-                        key={stat.title}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.3, delay: index * 0.1 }}
-                    >
-                        <Card>
-                            <CardContent className="p-6">
-                                <div className="flex items-start justify-between">
-                                    <div>
-                                        <p className="text-sm text-muted-foreground">{stat.title}</p>
-                                        <p className="text-2xl font-bold text-foreground mt-1">{stat.value}</p>
-                                    </div>
-                                    <div className="p-2 rounded-sm bg-muted"><stat.icon className="h-5 w-5 text-muted-foreground" /></div>
-                                </div>
-                                <div className="flex items-center gap-1 mt-4">
-                                    {stat.trend === 'up' ? <TrendingUp className="h-4 w-4 text-success" /> : <TrendingDown className="h-4 w-4 text-destructive" />}
-                                    <span className={stat.trend === 'up' ? 'text-success' : 'text-destructive'}>{stat.change}</span>
-                                    <span className="text-muted-foreground text-sm">vs last month</span>
-                                </div>
-                            </CardContent>
-                        </Card>
-                    </motion.div>
-                ))}
-            </div>
+            <DashboardStats loading={isLoading} data={dashboardData} />
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Activity Feed */}
@@ -114,60 +57,125 @@ export default function DashboardPage() {
                     </CardHeader>
                     <CardContent>
                         <div className="space-y-4">
-                            {activities.map((activity, index) => (
-                                <motion.div
-                                    key={activity.id}
-                                    initial={{ opacity: 0, x: -20 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    transition={{ duration: 0.3, delay: index * 0.1 }}
-                                    className="flex items-start gap-4 p-3 rounded-sm hover:bg-muted/50 transition-colors"
-                                >
-                                    <div className="p-2 rounded-sm bg-tangerine/10">
-                                        <div className="h-4 w-4 text-tangerine">
-                                            {activity.type === 'lead' ? <Users className="h-4 w-4" /> : activity.type === 'deal' ? <Target className="h-4 w-4" /> : <Sparkles className="h-4 w-4" />}
+                            {isLoading ? (
+                                Array(5).fill(0).map((_, i) => (
+                                    <div key={i} className="flex items-start gap-4 p-3 animate-pulse">
+                                        <div className="h-10 w-10 bg-muted rounded" />
+                                        <div className="flex-1 space-y-2">
+                                            <div className="h-4 w-1/3 bg-muted rounded" />
+                                            <div className="h-3 w-1/2 bg-muted rounded" />
                                         </div>
                                     </div>
-                                    <div className="flex-1 min-w-0">
-                                        <p className="font-medium text-foreground">{activity.title}</p>
-                                        <p className="text-sm text-muted-foreground truncate">{activity.description}</p>
-                                    </div>
-                                    <span className="text-xs text-muted-foreground whitespace-nowrap">{activity.time}</span>
-                                </motion.div>
-                            ))}
+                                ))
+                            ) : (
+                                activities.map((activity, index) => (
+                                    <motion.div
+                                        key={activity.id}
+                                        initial={{ opacity: 0, x: -20 }}
+                                        animate={{ opacity: 1, x: 0 }}
+                                        transition={{ duration: 0.3, delay: index * 0.1 }}
+                                        className="flex items-start gap-4 p-3 rounded-none hover:bg-muted/50 transition-colors group"
+                                    >
+                                        <div className="p-2 rounded-none bg-tangerine/10">
+                                            <div className="h-4 w-4 text-tangerine transition-transform duration-300 group-hover:-translate-y-0.5">
+                                                {activity.type === 'contact' ? <Users className="h-4 w-4" /> : activity.type === 'deal' ? <Target className="h-4 w-4" /> : <Sparkles className="h-4 w-4" />}
+                                            </div>
+                                        </div>
+                                        <div className="flex-1 min-w-0">
+                                            <p className="font-medium text-foreground">{activity.title}</p>
+                                            <p className="text-sm text-muted-foreground truncate">{activity.description}</p>
+                                        </div>
+                                        <span className="text-xs text-muted-foreground whitespace-nowrap">{activity.time.split('T')[0]}</span>
+                                    </motion.div>
+                                ))
+                            )}
+                            {!isLoading && activities.length === 0 && (
+                                <p className="text-muted-foreground text-sm py-4 text-center border border-dashed p-4">
+                                    No recent activity.
+                                </p>
+                            )}
                         </div>
                     </CardContent>
                 </Card>
 
-                {/* Top deals */}
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Top Deals</CardTitle>
-                        <CardDescription>Your highest value opportunities</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="space-y-6">
-                            {topDeals.map((deal, index) => (
-                                <motion.div
-                                    key={deal.id}
-                                    initial={{ opacity: 0, y: 10 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ duration: 0.3, delay: index * 0.1 }}
-                                >
-                                    <div className="flex items-center justify-between mb-2">
-                                        <div>
-                                            <p className="font-medium text-foreground text-sm">{deal.name}</p>
-                                            <p className="text-xs text-muted-foreground">{deal.stage}</p>
-                                        </div>
-                                        <Badge variant="secondary">${(deal.value as number).toLocaleString()}</Badge>
+                {/* Module Summaries */}
+                <div className="space-y-6">
+                    <Card>
+                        <CardHeader className="pb-2">
+                            <CardTitle className="text-lg">Module Overviews</CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                            <div className="flex items-center justify-between p-3 bg-muted/30 border border-border/50">
+                                <div className="flex items-center gap-3">
+                                    <Building2 className="h-4 w-4 text-blue-500" />
+                                    <span className="text-sm font-medium">CRM</span>
+                                </div>
+                                <div className="text-xs text-muted-foreground">
+                                    {isLoading ? '...' : `${dashboardData?.deals.total} active deals`}
+                                </div>
+                            </div>
+                            <div className="flex items-center justify-between p-3 bg-muted/30 border border-border/50">
+                                <div className="flex items-center gap-3">
+                                    <Mail className="h-4 w-4 text-tangerine" />
+                                    <span className="text-sm font-medium">Engagement</span>
+                                </div>
+                                <div className="text-right">
+                                    <div className="text-xs font-bold">{isLoading ? '...' : `${dashboardData?.campaigns.active} running`}</div>
+                                    <div className="text-[10px] text-muted-foreground uppercase">
+                                        {isLoading ? '...' : dashboardData?.campaigns.lastSendDate ? `Last send: ${dashboardData.campaigns.lastSendDate.split('T')[0]}` : 'No sends yet'}
                                     </div>
-                                    <Progress value={deal.probability} className="h-2" />
-                                </motion.div>
-                            ))}
-                        </div>
-                        <Button variant="outline" className="w-full mt-6" asChild><Link href="/dashboard/crm/deals">View all deals<ArrowRight className="ml-2 h-4 w-4" /></Link></Button>
-                    </CardContent>
-                </Card>
+                                </div>
+                            </div>
+                            <div className="flex items-center justify-between p-3 bg-muted/30 border border-border/50">
+                                <div className="flex items-center gap-3">
+                                    <Clock className="h-4 w-4 text-purple-500" />
+                                    <span className="text-sm font-medium">Automation</span>
+                                </div>
+                                <div className="text-right">
+                                    <div className="text-xs font-bold">{isLoading ? '...' : `${dashboardData?.workflows.runs} total runs`}</div>
+                                    <div className="text-[10px] text-muted-foreground uppercase">
+                                        {isLoading ? '...' : dashboardData?.workflows.lastRunDate ? `Last run: ${dashboardData.workflows.lastRunDate.split('T')[0]}` : 'No runs yet'}
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="flex items-center justify-between p-3 bg-muted/30 border border-border/50">
+                                <div className="flex items-center gap-3">
+                                    <Target className="h-4 w-4 text-success" />
+                                    <span className="text-sm font-medium">SEO</span>
+                                </div>
+                                <div className="text-xs text-muted-foreground">
+                                    {isLoading ? '...' : `${dashboardData?.seo.projects} projects`}
+                                </div>
+                            </div>
+                            <div className="flex items-center justify-between p-3 bg-muted/30 border border-border/50">
+                                <div className="flex items-center gap-3">
+                                    <Sparkles className="h-4 w-4 text-yellow-500" />
+                                    <span className="text-sm font-medium">Compliance</span>
+                                </div>
+                                <div className="text-xs text-muted-foreground">
+                                    {isLoading ? '...' : `${dashboardData?.compliance.gdprRequests} GDPR requests`}
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+
+                    <Card className="bg-tangerine/5 border-tangerine/20">
+                        <CardContent className="p-6">
+                            <div className="flex items-center gap-2 text-tangerine mb-2">
+                                <Sparkles className="h-4 w-4" />
+                                <span className="text-sm font-bold uppercase tracking-wider">AI Insight</span>
+                            </div>
+                            <p className="text-sm text-foreground">
+                                Your deal pipeline is 23% larger than last month.
+                                Consider enlisting 4 more companies for enrichment to maintain momentum.
+                            </p>
+                            <Button size="sm" className="w-full mt-4 bg-tangerine hover:bg-tangerine/90 text-white border-none shadow-lg shadow-tangerine/20" asChild>
+                                <Link href="/dashboard/intelligence">Enrich Now</Link>
+                            </Button>
+                        </CardContent>
+                    </Card>
+                </div>
             </div>
-        </div>
+        </div >
     );
 }

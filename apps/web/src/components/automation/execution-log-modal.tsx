@@ -10,23 +10,44 @@ import {
 } from '@ori-os/ui';
 import { CheckCircle2, Clock, XCircle, ChevronRight, Zap } from 'lucide-react';
 
+import { useState, useEffect } from 'react';
+
 interface ExecutionLogModalProps {
-    isOpen: boolean;
-    onClose: () => void;
+    open: boolean;
+    onOpenChange: (open: boolean) => void;
 }
 
-export function ExecutionLogModal({ isOpen, onClose }: ExecutionLogModalProps) {
-    const logs = [
-        { id: '1', workflow: 'Auto-reply to New Leads', status: 'Success', time: '2 mins ago', steps: 4 },
-        { id: '2', workflow: 'Slack Notify: Big Deal', status: 'Success', time: '1 hour ago', steps: 2 },
-        { id: '3', workflow: 'Monthly Report Sync', status: 'Failed', time: '1 day ago', steps: 1, error: 'API Auth Error' },
-        { id: '4', workflow: 'Auto-reply to New Leads', status: 'In Progress', time: 'Just now', steps: 2 },
-        { id: '5', workflow: 'Database Backup', status: 'Success', time: '2 hours ago', steps: 1 },
-        { id: '6', workflow: 'Lead Enrichment Sync', status: 'Success', time: '3 hours ago', steps: 12 },
-    ];
+export function ExecutionLogModal({ open, onOpenChange }: ExecutionLogModalProps) {
+    const [logs, setLogs] = useState<any[]>([]);
+    const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        if (!open) return;
+        const fetchLogs = async () => {
+            setLoading(true);
+            try {
+                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/automations/workflows/runs`);
+                const data = await res.json();
+                setLogs(data.map((run: any) => ({
+                    id: run.id,
+                    workflow: run.workflow?.name || 'Unknown Workflow',
+                    status: run.status.charAt(0).toUpperCase() + run.status.slice(1),
+                    time: new Date(run.startedAt).toLocaleString(),
+                    steps: run.steps?.length || 0,
+                    error: run.status === 'failed' ? (run.steps?.find((s: any) => s.errorMessage)?.errorMessage || 'Execution error') : null
+                })));
+            } catch (error) {
+                console.error('Failed to fetch logs:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchLogs();
+    }, [open]);
+    Joe
 
     return (
-        <Dialog open={isOpen} onOpenChange={onClose}>
+        <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="sm:max-w-[650px] p-0 overflow-hidden">
                 <DialogHeader className="p-6 pb-2">
                     <DialogTitle className="flex items-center gap-2">
@@ -37,7 +58,7 @@ export function ExecutionLogModal({ isOpen, onClose }: ExecutionLogModalProps) {
                 <ScrollArea className="max-h-[500px] p-6 pt-2">
                     <div className="space-y-3">
                         {logs.map((log) => (
-                            <div key={log.id} className="p-4 rounded-sm border border-border bg-card/50 hover:bg-muted/50 transition-all cursor-pointer group hover:border-tangerine/30">
+                            <div key={log.id} className="p-4 rounded-none border border-border bg-card/50 hover:bg-muted/50 transition-all cursor-pointer group hover:border-tangerine/30">
                                 <div className="flex items-center justify-between mb-2">
                                     <div className="flex items-center gap-3">
                                         {log.status === 'Success' ? <CheckCircle2 className="h-4 w-4 text-green-500" /> :

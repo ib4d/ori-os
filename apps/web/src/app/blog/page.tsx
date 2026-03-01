@@ -65,7 +65,7 @@ export default function BlogPage() {
                                         </p>
                                         <div className="flex items-center justify-between">
                                             <div className="flex items-center gap-3">
-                                                <div className="h-10 w-10 rounded-full bg-white/10" />
+                                                <div className="h-10 w-10 rounded-none bg-white/10" />
                                                 <div className="text-sm italic">by Alex Rivera • Feb 5, 2026</div>
                                             </div>
                                             <Button variant="accent">Read More</Button>

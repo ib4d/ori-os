@@ -80,7 +80,7 @@ export function EnrichmentModal({ isOpen, onClose, type }: EnrichmentModalProps)
                                 initial={{ opacity: 0, x: -10 }}
                                 animate={{ opacity: 1, x: 0 }}
                                 transition={{ delay: i * 0.1 }}
-                                className="p-4 rounded-sm bg-muted/50 border border-border/50"
+                                className="p-4 rounded-none bg-muted/50 border border-border/50"
                             >
                                 <h4 className="text-sm font-bold text-foreground mb-1 flex items-center gap-2">
                                     <Zap className="h-3 w-3 text-tangerine" />
@@ -91,7 +91,7 @@ export function EnrichmentModal({ isOpen, onClose, type }: EnrichmentModalProps)
                         ))}
                     </div>
 
-                    <div className="p-4 rounded-sm bg-tangerine/5 border border-tangerine/20 flex gap-3">
+                    <div className="p-4 rounded-none bg-tangerine/5 border border-tangerine/20 flex gap-3">
                         <TrendingUp className="h-5 w-5 text-tangerine shrink-0 mt-0.5" />
                         <div className="text-sm">
                             <span className="font-bold text-tangerine">Hot Signal:</span>

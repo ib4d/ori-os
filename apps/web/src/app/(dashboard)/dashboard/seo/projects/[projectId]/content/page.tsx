@@ -99,10 +99,10 @@ export default function ContentAnalysisPage() {
                             <div className="relative inline-flex items-center justify-center">
                                 <div
                                     className={`text-6xl font-bold ${analysis.score >= 80
-                                            ? 'text-green-600'
-                                            : analysis.score >= 60
-                                                ? 'text-yellow-600'
-                                                : 'text-red-600'
+                                        ? 'text-green-600'
+                                        : analysis.score >= 60
+                                            ? 'text-yellow-600'
+                                            : 'text-red-600'
                                         }`}
                                 >
                                     {analysis.score}
@@ -193,9 +193,9 @@ export default function ContentAnalysisPage() {
                                 {analysis.recommendations.map((rec: any, index: number) => (
                                     <div
                                         key={index}
-                                        className={`p-4 rounded-lg border-l-4 ${rec.priority === 'high'
-                                                ? 'border-red-500 bg-red-50 dark:bg-red-950'
-                                                : 'border-yellow-500 bg-yellow-50 dark:bg-yellow-950'
+                                        className={`p-4 rounded-none border-l-4 ${rec.priority === 'high'
+                                            ? 'border-red-500 bg-red-50 dark:bg-red-950'
+                                            : 'border-yellow-500 bg-yellow-50 dark:bg-yellow-950'
                                             }`}
                                     >
                                         <div className="flex items-start justify-between">
@@ -203,8 +203,8 @@ export default function ContentAnalysisPage() {
                                                 <div className="flex items-center gap-2 mb-1">
                                                     <span
                                                         className={`text-xs font-medium px-2 py-1 rounded ${rec.priority === 'high'
-                                                                ? 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300'
-                                                                : 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-300'
+                                                            ? 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300'
+                                                            : 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-300'
                                                             }`}
                                                     >
                                                         {rec.priority.toUpperCase()}
@@ -233,7 +233,7 @@ export default function ContentAnalysisPage() {
                             </h2>
                             <div className="space-y-3">
                                 {analysis.competitors.map((comp: any, index: number) => (
-                                    <div key={index} className="p-4 border rounded-lg">
+                                    <div key={index} className="p-4 border rounded-none">
                                         <div className="flex items-start justify-between mb-2">
                                             <div className="flex-1">
                                                 <div className="flex items-center gap-2">

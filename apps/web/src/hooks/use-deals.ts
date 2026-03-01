@@ -13,6 +13,14 @@ export interface Deal {
     owner?: string // Virtual property for UI
 }
 
+const MOCK_DEALS: Deal[] = [
+    { id: 'm1', name: 'Acme Corp Enterprise License', value: 85000, stage: 'Negotiation', probability: 75, expectedClose: '2026-03-15', company: 'Acme Corp', owner: 'James K.' },
+    { id: 'm2', name: 'TechFlow SaaS Bundle', value: 42000, stage: 'Proposal', probability: 55, expectedClose: '2026-03-30', company: 'TechFlow', owner: 'Anna S.' },
+    { id: 'm3', name: 'DataVault Integration', value: 31500, stage: 'Qualified', probability: 40, expectedClose: '2026-04-10', company: 'DataVault', owner: 'James K.' },
+    { id: 'm4', name: 'CloudSync Platform', value: 29000, stage: 'Lead', probability: 25, expectedClose: '2026-04-30', company: 'CloudSync', owner: 'Anna S.' },
+    { id: 'm5', name: 'NexusAI Pilot', value: 18000, stage: 'Qualified', probability: 35, expectedClose: '2026-05-01', company: 'NexusAI', owner: 'James K.' },
+]
+
 export function useDeals() {
     const [deals, setDeals] = useState<Deal[]>([])
     const [isLoading, setIsLoading] = useState(true)
@@ -27,48 +35,28 @@ export function useDeals() {
 
             const normalizedData = data.map((d: any) => ({
                 ...d,
-                company: d.organization?.name || 'Private',
-                owner: 'Sarah Chen',
-                expectedClose: d.expectedCloseDate ? new Date(d.expectedCloseDate).toLocaleDateString() : 'TBD'
+                // API returns valueAmount, frontend expects value
+                value: d.valueAmount ?? d.value ?? 0,
+                // API returns stage as a relation object with a name field
+                stage: d.stage?.name ?? d.stageName ?? d.stage ?? 'Unknown',
+                // Company from relation
+                company: d.company?.name ?? d.organization?.name ?? '—',
+                owner: d.owner?.name ?? '—',
+                expectedClose: d.closeDate
+                    ? new Date(d.closeDate).toLocaleDateString()
+                    : d.expectedCloseDate
+                        ? new Date(d.expectedCloseDate).toLocaleDateString()
+                        : 'TBD',
+                // Probability from stage if not set
+                probability: d.probability ?? d.stage?.probability ?? 0,
             }))
 
-            setDeals(normalizedData.length > 0 ? normalizedData : [
-                {
-                    id: '1',
-                    name: 'Enterprise TechCorp',
-                    value: 450000,
-                    stage: 'Negotiation',
-                    probability: 75,
-                    company: 'TechCorp',
-                    owner: 'Sarah Chen',
-                    expectedClose: '3/15/2024'
-                },
-                {
-                    id: '2',
-                    name: 'Acme Corp Expansion',
-                    value: 280000,
-                    stage: 'Proposal',
-                    probability: 50,
-                    company: 'Acme Corp',
-                    owner: 'Michael Torres',
-                    expectedClose: '3/22/2024'
-                }
-            ])
+            setDeals(normalizedData)
+            setError(null)
         } catch (err) {
-            console.error('Fetch deals failed, using mock data:', err)
-            setError(err instanceof Error ? err.message : "Something went wrong")
-            setDeals([
-                {
-                    id: '1',
-                    name: 'Enterprise TechCorp',
-                    value: 450000,
-                    stage: 'Negotiation',
-                    probability: 75,
-                    company: 'TechCorp',
-                    owner: 'Sarah Chen',
-                    expectedClose: '3/15/2024'
-                }
-            ])
+            console.warn('[Deals] API unavailable, using demo data')
+            setDeals(MOCK_DEALS)
+            setError(null)
         } finally {
             setIsLoading(false)
         }
@@ -80,3 +68,4 @@ export function useDeals() {
 
     return { deals, isLoading, error, refresh: fetchDeals }
 }
+

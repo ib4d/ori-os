@@ -22,7 +22,7 @@ export default function CampaignSchedulePage({ params }: { params: Promise<{ id:
                     <CardDescription>Configure when your emails should be sent.</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
-                    <div className="p-8 border-2 border-dashed rounded-lg text-center opacity-50">
+                    <div className="p-8 border-2 border-dashed rounded-none text-center opacity-50">
                         <Calendar className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
                         <p className="text-lg font-medium">Scheduler Coming Soon</p>
                         <p className="text-sm text-muted-foreground">Detailed timezone and sending window controls are being implemented.</p>

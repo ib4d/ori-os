@@ -132,7 +132,7 @@ export function Sidebar({
                 href={item.href}
                 onClick={onMobileClose}
                 className={cn(
-                    'flex items-center gap-3 px-3 py-2.5 rounded-sm transition-all duration-200 group relative',
+                    'flex items-center gap-3 px-3 py-2.5 rounded-none transition-all duration-200 group relative',
                     isActive
                         ? 'bg-tangerine/10 text-tangerine'
                         : 'text-muted-foreground hover:text-foreground hover:bg-muted'
@@ -140,8 +140,7 @@ export function Sidebar({
             >
                 <item.icon
                     className={cn(
-                        'h-5 w-5 shrink-0 transition-colors',
-                        isActive ? 'text-tangerine' : 'group-hover:text-foreground'
+                        'h-5 w-5 shrink-0 transition-transform duration-200 text-tangerine group-hover:-translate-y-[1px]'
                     )}
                 />
                 <AnimatePresence>
@@ -157,14 +156,14 @@ export function Sidebar({
                     )}
                 </AnimatePresence>
                 {'badge' in item && item.badge && !collapsed && (
-                    <span className="ml-auto px-1.5 py-0.5 text-2xs font-medium bg-tangerine/10 text-tangerine rounded">
+                    <span className="ml-auto px-1.5 py-0.5 text-2xs font-medium bg-tangerine/10 text-tangerine rounded-none">
                         {item.badge}
                     </span>
                 )}
                 {isActive && (
                     <motion.div
                         layoutId="sidebar-active"
-                        className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-tangerine rounded-r-full"
+                        className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-tangerine rounded-none"
                         transition={{ type: 'spring', stiffness: 300, damping: 30 }}
                     />
                 )}
@@ -190,7 +189,7 @@ export function Sidebar({
             {/* Logo */}
             <div className="flex items-center justify-between h-16 px-4 border-b border-border">
                 <Link href="/dashboard" className="flex items-center gap-2">
-                    <div className="h-8 w-8 rounded-sm bg-gradient-to-br from-tangerine to-tangerine/80 flex items-center justify-center shrink-0">
+                    <div className="h-8 w-8 rounded-none bg-gradient-to-br from-tangerine to-tangerine/80 flex items-center justify-center shrink-0">
                         <span className="text-white font-bold text-lg">O</span>
                     </div>
                     <AnimatePresence>

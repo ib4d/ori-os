@@ -41,7 +41,7 @@ export default function ActivityPage() {
                                 transition={{ duration: 0.2, delay: index * 0.05 }}
                                 className="p-4 flex items-start gap-4 hover:bg-muted/30 transition-colors"
                             >
-                                <div className={`p-2 rounded-sm ${activity.type === 'email' ? 'bg-blue-500/10 text-blue-500' :
+                                <div className={`p-2 rounded-none ${activity.type === 'email' ? 'bg-blue-500/10 text-blue-500' :
                                         activity.type === 'crm' ? 'bg-tangerine/10 text-tangerine' :
                                             'bg-purple-500/10 text-purple-500'
                                     }`}>

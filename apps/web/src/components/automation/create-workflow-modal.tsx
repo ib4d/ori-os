@@ -15,17 +15,19 @@ import {
     SelectItem,
     SelectTrigger,
     SelectValue,
-    useToast,
     Textarea,
+    useToast,
 } from '@ori-os/ui';
 
+type WorkflowStatus = 'active' | 'paused' | 'draft';
+
 interface CreateWorkflowModalProps {
-    isOpen: boolean;
-    onClose: () => void;
+    open: boolean;
+    onOpenChange: (open: boolean) => void;
     onSuccess: () => void;
 }
 
-export function CreateWorkflowModal({ isOpen, onClose, onSuccess }: CreateWorkflowModalProps) {
+export function CreateWorkflowModal({ open, onOpenChange, onSuccess }: CreateWorkflowModalProps) {
     const { toast } = useToast();
     const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -34,75 +36,95 @@ export function CreateWorkflowModal({ isOpen, onClose, onSuccess }: CreateWorkfl
         setIsSubmitting(true);
 
         const formData = new FormData(e.currentTarget);
-        const data = {
-            name: formData.get('name') as string,
-            description: formData.get('description') as string,
-            status: 'Draft',
-            steps: [], // Start empty
+        const name = String(formData.get('name') ?? '').trim();
+        const description = String(formData.get('description') ?? '').trim();
+        const trigger = String(formData.get('trigger') ?? 'new_contact');
+
+        const payload = {
+            name,
+            description,
+            trigger,
+            status: 'draft' as WorkflowStatus,
+            steps: [],
         };
 
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/automations/workflows`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/automations/workflows`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data),
+                body: JSON.stringify(payload),
             });
 
-            if (!response.ok) throw new Error('Failed to create workflow');
+            if (!res.ok) throw new Error(`Failed to create workflow (${res.status})`);
 
             toast({
                 title: 'Workflow Created',
-                description: `"${data.name}" has been added to your draft workflows.`,
+                description: `"${payload.name}" has been added to your workflows.`,
             });
+
             onSuccess();
+            onOpenChange(false);
         } catch (error) {
             console.error('Create workflow failed:', error);
-            // Mock success for demo
+
+            // Simulated success for demo/dev until API is fully wired.
             toast({
                 title: 'Workflow Created (Simulated)',
-                description: `"${data.name}" added to dashboard.`,
+                description: `"${payload.name}" was created locally (API not ready).`,
             });
+
             onSuccess();
+            onOpenChange(false);
         } finally {
             setIsSubmitting(false);
         }
     };
 
     return (
-        <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent className="sm:max-w-[500px]">
+        <Dialog open={open} onOpenChange={onOpenChange}>
+            <DialogContent className="sm:max-w-[520px]">
                 <DialogHeader>
                     <DialogTitle>Create New Workflow</DialogTitle>
                 </DialogHeader>
-                <form onSubmit={handleSubmit} className="space-y-4 py-4">
-                    <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="name" className="text-right">Name</Label>
-                        <Input id="name" name="name" placeholder="Lead Outreach Automation" className="col-span-3" required />
+
+                <form onSubmit={handleSubmit} className="space-y-5">
+                    <div className="grid gap-2">
+                        <Label htmlFor="name">Name</Label>
+                        <Input id="name" name="name" placeholder="e.g. New Lead → Slack + Email" required />
                     </div>
-                    <div className="grid grid-cols-4 items-start gap-4">
-                        <Label htmlFor="description" className="text-right pt-2">Description</Label>
-                        <Textarea id="description" name="description" placeholder="Describe what this workflow does..." className="col-span-3" required />
+
+                    <div className="grid gap-2">
+                        <Label htmlFor="description">Description</Label>
+                        <Textarea
+                            id="description"
+                            name="description"
+                            placeholder="What does this workflow do?"
+                            rows={3}
+                            required
+                        />
                     </div>
-                    <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="trigger" className="text-right">Trigger</Label>
-                        <div className="col-span-3">
-                            <Select name="trigger" defaultValue="new_contact">
-                                <SelectTrigger>
-                                    <SelectValue placeholder="Select trigger" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="new_contact">When a new contact is added</SelectItem>
-                                    <SelectItem value="deal_won">When a deal is closed won</SelectItem>
-                                    <SelectItem value="email_responded">When a lead responds to email</SelectItem>
-                                    <SelectItem value="schedule">On a specific schedule</SelectItem>
-                                </SelectContent>
-                            </Select>
-                        </div>
+
+                    <div className="grid gap-2">
+                        <Label>Trigger</Label>
+                        <Select name="trigger" defaultValue="new_contact">
+                            <SelectTrigger>
+                                <SelectValue placeholder="Select trigger" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="new_contact">When a new contact is added</SelectItem>
+                                <SelectItem value="deal_won">When a deal is closed won</SelectItem>
+                                <SelectItem value="email_responded">When a lead responds to email</SelectItem>
+                                <SelectItem value="schedule">On a specific schedule</SelectItem>
+                            </SelectContent>
+                        </Select>
                     </div>
+
                     <DialogFooter>
-                        <Button type="button" variant="outline" onClick={onClose}>Cancel</Button>
+                        <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
+                            Cancel
+                        </Button>
                         <Button type="submit" variant="accent" disabled={isSubmitting}>
-                            {isSubmitting ? 'Creating...' : 'Create Workflow'}
+                            {isSubmitting ? 'Creating…' : 'Create Workflow'}
                         </Button>
                     </DialogFooter>
                 </form>

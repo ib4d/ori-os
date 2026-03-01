@@ -4,8 +4,8 @@ import { ConnectorsController } from './connectors.controller';
 import { EmailFallbackStrategy } from './strategies/email-fallback.strategy';
 
 @Module({
-    controllers: [ConnectorsController],
-    providers: [ConnectorsService, EmailFallbackStrategy],
-    exports: [ConnectorsService, EmailFallbackStrategy],
+  controllers: [ConnectorsController],
+  providers: [ConnectorsService, EmailFallbackStrategy],
+  exports: [ConnectorsService, EmailFallbackStrategy],
 })
-export class ConnectorsModule { }
+export class ConnectorsModule {}

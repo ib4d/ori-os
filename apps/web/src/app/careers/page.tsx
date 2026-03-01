@@ -39,7 +39,7 @@ export default function CareersPage() {
                             ].map((v, i) => (
                                 <Card key={i} className="bg-muted/30 border-none">
                                     <CardContent className="p-8 text-center">
-                                        <div className="p-4 rounded-sm bg-background w-fit mx-auto mb-6">
+                                        <div className="p-4 rounded-none bg-background w-fit mx-auto mb-6">
                                             <v.icon className="h-8 w-8 text-tangerine" />
                                         </div>
                                         <h3 className="text-xl font-bold mb-3">{v.title}</h3>

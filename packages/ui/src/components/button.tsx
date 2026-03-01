@@ -9,19 +9,19 @@ const buttonVariants = cva(
         variants: {
             variant: {
                 default:
-                    'bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm hover:shadow-md',
+                    'bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm axion-button-hover',
                 destructive:
-                    'bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-sm',
+                    'bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-sm axion-button-hover',
                 outline:
-                    'border border-input bg-background hover:bg-accent hover:text-accent-foreground',
+                    'border border-input bg-background hover:bg-accent hover:text-accent-foreground axion-button-hover',
                 secondary:
-                    'bg-secondary text-secondary-foreground hover:bg-secondary/80',
+                    'bg-secondary text-secondary-foreground hover:bg-secondary/80 axion-button-hover',
                 ghost: 'hover:bg-accent hover:text-accent-foreground',
                 link: 'text-primary underline-offset-4 hover:underline',
                 accent:
-                    'bg-tangerine text-white hover:bg-tangerine/90 shadow-sm hover:shadow-glow-sm',
+                    'bg-tangerine text-white hover:bg-tangerine/90 shadow-sm axion-button-hover',
                 glass:
-                    'glass-card hover:bg-white/90 dark:hover:bg-gunmetal/90',
+                    'glass-card hover:bg-white/90 dark:hover:bg-gunmetal/90 axion-button-hover',
             },
             size: {
                 default: 'h-10 px-4 py-2',
@@ -33,10 +33,10 @@ const buttonVariants = cva(
                 'icon-lg': 'h-12 w-12',
             },
             rounded: {
-                default: 'rounded-sm',
-                md: 'rounded-md',
-                lg: 'rounded-lg',
-                full: 'rounded-full',
+                default: 'rounded-none',
+                md: 'rounded-none',
+                lg: 'rounded-none',
+                full: 'rounded-none',
                 none: 'rounded-none',
             },
         },

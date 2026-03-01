@@ -163,7 +163,7 @@ export default function TestBenchPage() {
                                 <Card key={action.name} className="overflow-hidden border-border/50 hover:border-primary/50 transition-colors">
                                     <CardHeader className="pb-2">
                                         <div className="flex items-center gap-3 mb-1">
-                                            <div className="p-2 bg-primary/10 rounded-lg text-primary">
+                                            <div className="p-2 bg-primary/10 rounded-none text-primary">
                                                 <action.icon className="w-5 h-5" />
                                             </div>
                                             <CardTitle className="text-base">{action.name}</CardTitle>

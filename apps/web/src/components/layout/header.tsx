@@ -69,7 +69,7 @@ export function Header({ onMobileMenuClick, sidebarCollapsed }: HeaderProps) {
                             className="w-64 lg:w-80 pl-10"
                             icon={<Search className="h-4 w-4" />}
                         />
-                        <kbd className="absolute right-3 top-1/2 -translate-y-1/2 hidden lg:inline-flex items-center gap-1 px-1.5 py-0.5 text-xs text-muted-foreground bg-muted rounded">
+                        <kbd className="absolute right-3 top-1/2 -translate-y-1/2 hidden lg:inline-flex items-center gap-1 px-1.5 py-0.5 text-xs text-muted-foreground bg-muted rounded-none">
                             ⌘K
                         </kbd>
                     </div>
@@ -92,7 +92,7 @@ export function Header({ onMobileMenuClick, sidebarCollapsed }: HeaderProps) {
                             <Button variant="ghost" size="icon-sm" className="relative">
                                 <Bell className="h-4 w-4" />
                                 {unreadCount > 0 && (
-                                    <span className="absolute -top-0.5 -right-0.5 h-4 w-4 bg-tangerine text-white text-2xs font-medium rounded-full flex items-center justify-center">
+                                    <span className="absolute -top-0.5 -right-0.5 h-4 w-4 bg-tangerine text-white text-2xs font-medium rounded-none flex items-center justify-center">
                                         {unreadCount}
                                     </span>
                                 )}
@@ -113,7 +113,7 @@ export function Header({ onMobileMenuClick, sidebarCollapsed }: HeaderProps) {
                                     >
                                         <div className="flex items-center gap-2 w-full">
                                             <div className="font-medium text-sm flex-1">{activity.title}</div>
-                                            {activity.status === 'unread' && <div className="h-2 w-2 rounded-full bg-tangerine" />}
+                                            {activity.status === 'unread' && <div className="h-2 w-2 rounded-none bg-tangerine" />}
                                         </div>
                                         <div className="text-xs text-muted-foreground line-clamp-2">
                                             {activity.description}

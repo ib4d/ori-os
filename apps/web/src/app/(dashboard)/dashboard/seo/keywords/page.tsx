@@ -196,7 +196,7 @@ export default function KeywordsPage() {
                                     initial={{ opacity: 0, y: 10 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ duration: 0.2, delay: index * 0.05 }}
-                                    className="grid grid-cols-12 gap-4 px-4 py-3 rounded-sm hover:bg-muted/50 transition-colors"
+                                    className="grid grid-cols-12 gap-4 px-4 py-3 rounded-none hover:bg-muted/50 transition-colors"
                                 >
                                     <div className="col-span-4">
                                         <p className="font-medium text-foreground">{keyword.keyword}</p>

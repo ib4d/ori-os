@@ -76,7 +76,7 @@ export default function ChangelogPage() {
                                     className="relative flex flex-col md:flex-row gap-8 md:gap-16"
                                 >
                                     {/* Circle on line */}
-                                    <div className="absolute left-0 top-0 h-10 w-10 rounded-full bg-background border-2 border-tangerine flex items-center justify-center z-10 hidden md:flex">
+                                    <div className="absolute left-0 top-0 h-10 w-10 rounded-none bg-background border-2 border-tangerine flex items-center justify-center z-10 hidden md:flex">
                                         <Zap className="h-5 w-5 text-tangerine" />
                                     </div>
 
@@ -123,7 +123,7 @@ export default function ChangelogPage() {
                             </p>
                             <div className="flex flex-col sm:flex-row gap-3 justify-center max-w-md mx-auto">
                                 <input
-                                    className="flex-1 h-12 px-4 rounded-sm border border-border bg-background text-sm focus:ring-2 focus:ring-tangerine focus:outline-none"
+                                    className="flex-1 h-12 px-4 rounded-none border border-border bg-background text-sm focus:ring-2 focus:ring-tangerine focus:outline-none"
                                     placeholder="Enter your email"
                                 />
                                 <Button variant="accent" size="lg">Subscribe</Button>

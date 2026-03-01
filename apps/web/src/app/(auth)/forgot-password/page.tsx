@@ -27,7 +27,7 @@ export default function ForgotPasswordPage() {
                 transition={{ duration: 0.5 }}
                 className="text-center"
             >
-                <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-success/10 flex items-center justify-center">
+                <div className="w-16 h-16 mx-auto mb-6 rounded-none bg-success/10 flex items-center justify-center">
                     <CheckCircle2 className="h-8 w-8 text-success" />
                 </div>
                 <h1 className="text-2xl font-bold text-foreground mb-2">Check your email</h1>
@@ -63,7 +63,7 @@ export default function ForgotPasswordPage() {
             {/* Mobile logo */}
             <div className="lg:hidden mb-8">
                 <Link href="/" className="flex items-center gap-2">
-                    <div className="h-8 w-8 rounded-sm bg-gradient-to-br from-tangerine to-tangerine/80 flex items-center justify-center">
+                    <div className="h-8 w-8 rounded-none bg-gradient-to-br from-tangerine to-tangerine/80 flex items-center justify-center">
                         <span className="text-white font-bold text-lg">O</span>
                     </div>
                     <span className="font-semibold text-xl text-foreground">Ori-OS</span>

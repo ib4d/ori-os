@@ -45,7 +45,7 @@ export default function IntegrationsPage() {
                                 <Button
                                     key={cat}
                                     variant={cat === 'All' ? 'accent' : 'ghost'}
-                                    className="rounded-full px-6"
+                                    className="rounded-none px-6"
                                 >
                                     {cat}
                                 </Button>
@@ -61,7 +61,7 @@ export default function IntegrationsPage() {
                                 <Card key={i} hover="lift" className="group cursor-pointer">
                                     <CardContent className="p-8">
                                         <div className="flex items-start justify-between mb-6">
-                                            <div className="p-4 rounded-sm bg-muted group-hover:bg-tangerine/10 transition-colors">
+                                            <div className="p-4 rounded-none bg-muted group-hover:bg-tangerine/10 transition-colors">
                                                 <p.icon className="h-8 w-8 text-foreground group-hover:text-tangerine transition-colors" />
                                             </div>
                                             <Badge variant="secondary">{p.category}</Badge>
@@ -107,7 +107,7 @@ function Input({ className, icon, ...props }: any) {
             )}
             <input
                 className={cn(
-                    "flex h-10 w-full rounded-sm border border-border bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tangerine focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-all",
+                    "flex h-10 w-full rounded-none border border-border bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tangerine focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-all",
                     className
                 )}
                 {...props}

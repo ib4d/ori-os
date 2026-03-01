@@ -74,7 +74,7 @@ export default function AboutPage() {
                             {values.map((v, i) => (
                                 <Card key={i} variant="outline" className="border-none shadow-none text-center">
                                     <CardContent className="p-6">
-                                        <div className="p-4 rounded-sm bg-tangerine/10 w-fit mx-auto mb-6">
+                                        <div className="p-4 rounded-none bg-tangerine/10 w-fit mx-auto mb-6">
                                             <v.icon className="h-8 w-8 text-tangerine" />
                                         </div>
                                         <h3 className="text-xl font-semibold mb-3">{v.title}</h3>
@@ -99,7 +99,7 @@ export default function AboutPage() {
                                     Today, we're a remote-first team of 50+ people helping thousands of companies streamline their go-to-market operations. We're backed by some of the world's leading investors and we're just getting started.
                                 </p>
                             </div>
-                            <div className="bg-gunmetal aspect-video rounded-sm overflow-hidden flex items-center justify-center">
+                            <div className="bg-gunmetal aspect-video rounded-none overflow-hidden flex items-center justify-center">
                                 <Building2 className="h-24 w-24 text-white/20" />
                             </div>
                         </div>

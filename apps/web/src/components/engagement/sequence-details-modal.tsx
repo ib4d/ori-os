@@ -42,7 +42,7 @@ export function SequenceDetailsModal({ isOpen, onClose, sequence }: SequenceDeta
                 <DialogHeader className="p-6 pb-2">
                     <div className="flex items-center justify-between pr-8">
                         <div className="flex items-center gap-3">
-                            <div className="p-2 rounded-sm bg-tangerine/10 text-tangerine">
+                            <div className="p-2 rounded-none bg-tangerine/10 text-tangerine">
                                 <BarChart3 className="h-5 w-5" />
                             </div>
                             <DialogTitle className="text-xl font-bold">{sequence.name}</DialogTitle>
@@ -67,7 +67,7 @@ export function SequenceDetailsModal({ isOpen, onClose, sequence }: SequenceDeta
                             {/* Quick Stats */}
                             <div className="grid grid-cols-4 gap-4">
                                 {stats.map((stat) => (
-                                    <div key={stat.label} className="p-4 rounded-sm border border-border bg-muted/20">
+                                    <div key={stat.label} className="p-4 rounded-none border border-border bg-muted/20">
                                         <div className="flex items-center gap-2 mb-1 text-muted-foreground">
                                             <stat.icon className={`h-3 w-3 ${stat.color}`} />
                                             <span className="text-[10px] uppercase font-bold tracking-wider">{stat.label}</span>
@@ -84,8 +84,8 @@ export function SequenceDetailsModal({ isOpen, onClose, sequence }: SequenceDeta
                                 </h4>
                                 <div className="space-y-3">
                                     {[1, 2, 3].map((i) => (
-                                        <div key={i} className="flex gap-3 text-sm p-3 rounded-sm border border-border/50">
-                                            <div className="w-1.5 h-1.5 rounded-full bg-tangerine mt-1.5" />
+                                        <div key={i} className="flex gap-3 text-sm p-3 rounded-none border border-border/50">
+                                            <div className="w-1.5 h-1.5 rounded-none bg-tangerine mt-1.5" />
                                             <div>
                                                 <p className="text-foreground"><span className="font-semibold">Email sent</span> to Jennifer Smith</p>
                                                 <p className="text-[10px] text-muted-foreground uppercase mt-0.5">2 hours ago</p>
@@ -103,9 +103,9 @@ export function SequenceDetailsModal({ isOpen, onClose, sequence }: SequenceDeta
                                     { step: 2, type: 'Email', name: 'Follow-up', delay: '2 days' },
                                     { step: 3, type: 'LinkedIn', name: 'Connection Request', delay: '1 day' },
                                 ].map((step) => (
-                                    <div key={step.step} className="p-4 rounded-sm border border-border flex items-center justify-between">
+                                    <div key={step.step} className="p-4 rounded-none border border-border flex items-center justify-between">
                                         <div className="flex items-center gap-4">
-                                            <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center font-bold text-sm">
+                                            <div className="h-8 w-8 rounded-none bg-muted flex items-center justify-center font-bold text-sm">
                                                 {step.step}
                                             </div>
                                             <div>

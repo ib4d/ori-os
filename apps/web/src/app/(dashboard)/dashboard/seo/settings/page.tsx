@@ -138,9 +138,9 @@ export default function SEOSettingsPage() {
                             <CardDescription>Connect to third-party SEO tools for more data.</CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-6">
-                            <div className="flex items-center justify-between p-4 border rounded-lg bg-muted/30">
+                            <div className="flex items-center justify-between p-4 border rounded-none bg-muted/30">
                                 <div className="flex items-center gap-4">
-                                    <div className="p-2 bg-white rounded-md border text-blue-600">
+                                    <div className="p-2 bg-white rounded-none border text-blue-600">
                                         <Globe className="h-6 w-6" />
                                     </div>
                                     <div>
@@ -150,9 +150,9 @@ export default function SEOSettingsPage() {
                                 </div>
                                 <Button variant="outline">Connect</Button>
                             </div>
-                            <div className="flex items-center justify-between p-4 border rounded-lg bg-muted/30 opacity-60">
+                            <div className="flex items-center justify-between p-4 border rounded-none bg-muted/30 opacity-60">
                                 <div className="flex items-center gap-4">
-                                    <div className="p-2 bg-white rounded-md border text-orange-600">
+                                    <div className="p-2 bg-white rounded-none border text-orange-600">
                                         <Zap className="h-6 w-6" />
                                     </div>
                                     <div>

@@ -16,9 +16,9 @@ const cardVariants = cva(
             },
             hover: {
                 none: '',
-                lift: 'hover:shadow-glass-lg hover:-translate-y-0.5',
-                glow: 'hover:shadow-glow',
-                scale: 'hover:scale-[1.02]',
+                lift: 'axion-card-hover',
+                glow: 'hover:shadow-glow axion-card-hover',
+                scale: 'hover:scale-[1.02] axion-card-hover',
             },
             padding: {
                 none: '',
@@ -27,9 +27,9 @@ const cardVariants = cva(
                 lg: 'p-8',
             },
             rounded: {
-                default: 'rounded-sm',
-                md: 'rounded-md',
-                lg: 'rounded-lg',
+                default: 'rounded-none',
+                md: 'rounded-none',
+                lg: 'rounded-none',
                 none: 'rounded-none',
             },
         },

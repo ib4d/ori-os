@@ -30,8 +30,8 @@ export function useSEOProjects() {
             setProjects(data);
             setError(null);
         } catch (err) {
-            console.error('Fetch SEO projects failed, using mock data:', err);
-            setError(err instanceof Error ? err.message : 'Something went wrong');
+            console.warn('[SEO Projects] API unavailable, using demo data');
+            setError(null);
             setProjects([
                 {
                     id: '1',

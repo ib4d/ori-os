@@ -27,7 +27,7 @@ export default function ContactPage() {
                                     <h3 className="text-lg font-semibold mb-6">Contact Information</h3>
                                     <div className="space-y-6">
                                         <div className="flex items-start gap-4">
-                                            <div className="p-3 rounded-sm bg-muted">
+                                            <div className="p-3 rounded-none bg-muted">
                                                 <Mail className="h-5 w-5 text-tangerine" />
                                             </div>
                                             <div>
@@ -37,7 +37,7 @@ export default function ContactPage() {
                                             </div>
                                         </div>
                                         <div className="flex items-start gap-4">
-                                            <div className="p-3 rounded-sm bg-muted">
+                                            <div className="p-3 rounded-none bg-muted">
                                                 <MessageSquare className="h-5 w-5 text-tangerine" />
                                             </div>
                                             <div>
@@ -46,7 +46,7 @@ export default function ContactPage() {
                                             </div>
                                         </div>
                                         <div className="flex items-start gap-4">
-                                            <div className="p-3 rounded-sm bg-muted">
+                                            <div className="p-3 rounded-none bg-muted">
                                                 <MapPin className="h-5 w-5 text-tangerine" />
                                             </div>
                                             <div>
@@ -95,7 +95,7 @@ export default function ContactPage() {
                                         <div className="space-y-2">
                                             <label className="text-sm font-medium">Message</label>
                                             <textarea
-                                                className="w-full min-h-[150px] p-3 rounded-sm bg-background border border-border focus:ring-2 focus:ring-tangerine focus:outline-none text-sm"
+                                                className="w-full min-h-[150px] p-3 rounded-none bg-background border border-border focus:ring-2 focus:ring-tangerine focus:outline-none text-sm"
                                                 placeholder="Tell us more about your needs..."
                                             />
                                         </div>

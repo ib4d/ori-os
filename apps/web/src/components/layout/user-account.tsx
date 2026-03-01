@@ -42,9 +42,9 @@ export function UserAccount({ collapsed }: UserAccountProps) {
                     variant="ghost"
                     className={collapsed ? 'h-9 w-9 p-0' : 'w-full justify-start px-2 py-6'}
                 >
-                    <Avatar className="h-8 w-8 shrink-0">
+                    <Avatar className="h-8 w-8 shrink-0 rounded-none">
                         <AvatarImage src={user.image || undefined} alt={user.name || ''} />
-                        <AvatarFallback className="bg-tangerine/10 text-tangerine text-xs">
+                        <AvatarFallback className="bg-tangerine/10 text-tangerine text-xs rounded-none">
                             {initials}
                         </AvatarFallback>
                     </Avatar>

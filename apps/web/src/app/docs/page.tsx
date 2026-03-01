@@ -49,18 +49,18 @@ export default function DocsPage() {
                                 </p>
                                 <div className="relative">
                                     <input
-                                        className="w-full h-14 pl-12 pr-4 rounded-sm bg-white/10 border-white/20 text-white placeholder:text-white/40 focus:ring-2 focus:ring-tangerine focus:outline-none transition-all"
+                                        className="w-full h-14 pl-12 pr-4 rounded-none bg-white/10 border-white/20 text-white placeholder:text-white/40 focus:ring-2 focus:ring-tangerine focus:outline-none transition-all"
                                         placeholder="Search documentation..."
                                     />
                                     <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-white/60" />
                                 </div>
                             </div>
                             <div className="hidden lg:block">
-                                <div className="p-8 rounded-sm bg-gunmetal/50 border border-white/10 backdrop-blur-xl">
+                                <div className="p-8 rounded-none bg-gunmetal/50 border border-white/10 backdrop-blur-xl">
                                     <div className="flex items-center gap-2 mb-6">
-                                        <div className="h-3 w-3 rounded-full bg-red-500" />
-                                        <div className="h-3 w-3 rounded-full bg-yellow-500" />
-                                        <div className="h-3 w-3 rounded-full bg-green-500" />
+                                        <div className="h-3 w-3 rounded-none bg-red-500" />
+                                        <div className="h-3 w-3 rounded-none bg-yellow-500" />
+                                        <div className="h-3 w-3 rounded-none bg-green-500" />
                                     </div>
                                     <div className="space-y-4 font-mono text-sm">
                                         <div className="text-tangerine">$ npm install @ori-os/sdk</div>
@@ -84,7 +84,7 @@ export default function DocsPage() {
                                 <Card key={i} className="group border-none bg-muted/30">
                                     <CardContent className="p-8">
                                         <div className="flex items-start gap-6">
-                                            <div className="p-4 rounded-sm bg-background w-fit shrink-0 group-hover:bg-tangerine/10 transition-colors">
+                                            <div className="p-4 rounded-none bg-background w-fit shrink-0 group-hover:bg-tangerine/10 transition-colors">
                                                 <cat.icon className="h-8 w-8 text-foreground group-hover:text-tangerine transition-colors" />
                                             </div>
                                             <div className="flex-1">
